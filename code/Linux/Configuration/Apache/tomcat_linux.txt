@@ -1,0 +1,77 @@
+###############################################################################
+###############################################################################
+
+## File Name     : tomcat_installation.sh
+
+## Author        : Alex(Zhouyang Zheng)
+
+## Corporation	 : Cloud Creek Systems, Inc.
+
+## Call Syntax   : . script.sh OR ./script.sh OR sh script.sh (if executable)
+
+## Requirements  : Execution Privileges(chmod +x /path/script.sh)
+
+## Last Modified : 09/22/2016
+
+## Description   : How to install tomcat on Oracle Linux
+
+###############################################################################
+###############################################################################
+
+########################################################
+########################################################
+
+## Step 1 : Create a new user(Tomcat)
+
+## useradd tomcat
+
+## passwd tomcat
+
+## chmod o+w /etc/sudoers
+## grant owner write permission
+
+## add entry for tomcat for root privileges
+
+########################################################
+########################################################
+
+########################################################
+########################################################
+
+## Step 2 : update Java and set up environment variables
+
+## yum install java-devel(for javac)(It seems like
+## not need to set env vari)
+
+## export JAVA_HOME=JRE_HOME
+
+## export PATH=$JAVA_HOME/bin:.
+
+## export CLASSPATH= libs home
+
+## write a java code, compile it and run it
+
+########################################################
+########################################################
+
+########################################################
+########################################################
+
+## Step 3 : install tomcat, set up environment variables
+
+## export CATALINA_HOME=TOMCAT HOME PATH
+
+## export CATALINA_BASE=$CATALINA_HOME
+
+## $CATALINA_HOME/bin/start.sh
+
+## $CATALINA_HOME/bin/stop.sh
+
+## http://localhost:8080/
+## http://localhost:8080/manager/html
+## http://localhost:8080/manager/status
+## localhost can be replaced by the hostname
+## hostname command get the hostname of the machine
+
+########################################################
+########################################################

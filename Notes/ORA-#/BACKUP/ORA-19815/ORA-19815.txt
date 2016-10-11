@@ -1,0 +1,112 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: ORA-19815.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected Custs	: Network In Montions
+
+-- Last Modified 	: 09/23/2016
+
+-- Description   	: db_recovery_file_size getting low
+
+-- Severity			: Critical
+
+-- Consequence		: 1. RMAN backup failed(suffer the risk of losing data)
+-- Consequence		  2. If online redo log group can't be archived and all in the active status, the instance may hang.
+
+-- Action1			: Notify Customer extend the filesystem or change the retention policy or backup to the tape
+-- Action2			: Check the alert log----ensure online redo log file is still archiving.
+-- Action3			: df -h to check the filesystem usage
+-- Action4			: check the rman history
+
+-------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Error(sample):
+
+ORA-19815: WARNING: db_recovery_file_dest_size of 48318382080 bytes is 100.00% used, and has 0 remaining bytes available.
+ORA-16014: log 3 sequence# 51 not archived, no available destinations
+ARCH: Archival stopped, error occurred. Will continue retrying
+ORACLE Instance DB1 – Archival Error
+ORA-16038: log 3 sequence# 51 cannot be archived
+ORA-19809: limit exceeded for recovery files
+ORA-00312: online log 3 thread 1: ‘/u01/oracle/oradata/DB1/redo03.log’
+ARCH: Archival stopped, error occurred. Will continue retrying
+ORACLE Instance DB1 – Archival Error
+ORA-16014: log 3 sequence# 51 not archived, no available destinations
+ORA-00312: online log 3 thread 1: ‘/u01/oracle/oradata/DB1/redo03.log’
+Errors in file /u01/oracle/product/diag/rdbms/db1/DB1/trace/DB1_arc0_17401.trc
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Solution:
+
+Its because your db_recovery_file_dest_size is full:
+
+SQL> show parameter db_recovery_file_dest_size
+
+NAME TYPE VALUE
+———————————— ———– ——————————
+db_recovery_file_dest_size big integer 45G
+SQL>
+
+SQL> set lines 100
+col name format a60
+select name, floor(space_limit/1024/1024) "Size MB", ceil(space_used/1024/1024) "Used MB" from v$recovery_file_dest order by name;
+select name, floor(space_limit/1024/1024/1024) "Size GB", ceil(space_used/1024/1024/1024) "Used GB" from v$recovery_file_dest order by name;
+
+NAME Size MB Used MB
+———————————————————— ———- ———-
+/data01/oracle/fast_recovery_area 46080 46080
+
+SQL>
+
+To Resolve this:
+
+Connect to RMAN prompt.
+
+-bash-3.2$ rman target /
+
+Recovery Manager: Release 11.2.0.3.0 – Production on Tue Aug 11 06:54:21 2012
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates. All rights reserved.
+
+connected to target database: DB1 (DBID=12345)
+
+RMAN>crosscheck archivelog all;
+
+RMAN>delete expired archivelog all;
+
+Then Check now:
+
+SQL> set lines 100
+col name format a60
+select name, floor(space_limit / 1024 / 1024) “Size MB”, ceil(space_used / 1024 / 1024) “Used MB” from v$recovery_file_dest order by name;SQL> SQL>
+
+NAME Size MB Used MB
+———————————————————— ———- ———-
+/data01/oracle/fast_recovery_area 46080 34121
+
+SQL>
+
+It has freed up 12G of space……
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Alternative solution:
+
+However, if there is no obsolete backupsets, the solution is to extend the filesystem or change the RMAN retention period and redundancy policy

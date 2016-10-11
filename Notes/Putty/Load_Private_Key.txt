@@ -1,0 +1,45 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: Load_Private_Key.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected Custs	: Network In Montions
+
+-- Last Modified 	: 09/28/2016
+
+-- Description   	: Can't load ssh private key under windows xp environment
+
+-- Severity			: Critical 
+
+-- Consequence		: can't log into their server
+
+-- Action			: Follow the step below
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+-- Download PuttyGen.exe(google)
+
+-- tutorial
+-- https://support.rackspace.com/how-to/logging-in-with-an-ssh-private-key-on-windows/
+
+-- Copy the key into the txt file
+
+-- Using Puttygen load the file and generate private .ppk file
+
+-- connect to their VPN
+
+-- Open putty, input hostname, navigation-->connection-->ssh-->load ppk
+
+-- for sfolpsdbsvc.sfodc.net, using oracle to log in.
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------

@@ -1,0 +1,81 @@
+###############################################################################
+
+## File Name     : 	vsftp_setup.sh
+
+## Author        : 	Alex(Zhouyang Zheng)
+
+## Corporation   :  Cloud Creek Systems, Inc.
+
+## Call Syntax   : 	. script.sh OR ./script.sh OR sh script.sh(if executable)
+
+## Requirements  : 	1. 	install in root permission 
+##				   	2.	The username and password are correct.
+##					3. 	SELinux is in permissive mode.
+##					4. 	There's a shell specified (/bin/bash) in /etc/passwd.
+##					5. 	The users are not listed in ftpusers:
+
+## Last Modified : 09/22/2016
+
+## Description   : Install VSFTP on the oracle linux
+
+###############################################################################
+
+##################################################
+##################################################
+
+## 	STEP 1 : FTP server installation
+
+##	yum list vsftpd*
+
+##	yum -y install vsftpd(name from last command)
+
+##	chkconfig vsftpd on
+
+## 	service vsftpd start
+
+##	Using FTP client(FileZilla)
+
+##################################################
+##################################################
+
+
+##################################################
+##################################################
+
+##	STEP 2 : Firewall configuration
+
+##	service iptables stop(if you want to disable it)
+
+## 	iptables -A INPUT -p tcp --dport 21 -j ACCEPT
+
+##################################################
+##################################################
+
+##################################################
+##################################################
+
+##	STEP 3	: SELinux(security enhanced Linux)
+##	If it is in the enforcing mode, it will deny
+## 	FTP connection
+
+##	setsebool -a | grep ftpd(display booleans with ftpd)
+
+## 	setenforce Permissive
+
+##################################################
+##################################################
+
+##################################################
+##################################################
+
+##	STEP 4	: Secruity
+
+##	vi /etc/vsftpd/vsftpd.conf
+
+## 	anonymous_enable=NO
+##	local_enable=YES
+
+##	service vsftpd reload
+
+##################################################
+##################################################

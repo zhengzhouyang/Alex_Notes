@@ -1,0 +1,23 @@
+###############################################################################
+
+## File Name     : CPU_INFO_CHECK.sh
+
+## Author        : Alex(Zhouyang Zheng)
+
+## Call Syntax   : . script.sh OR ./script.sh OR sh script.sh(if executable)
+
+## Requirements  : Execution Privileges(chmod +x /path/script.sh)
+
+## Last Modified : 10/06/2016
+
+## Description   : Checking the cores of the server, it is used to calculate Oracle Licensing
+
+###############################################################################
+
+grep 'physical id' /proc/cpuinfo | sort -u
+
+grep 'cores' /proc/cpuinfo | sort -u
+
+egrep 'cores|siblings' /proc/cpuinfo | sort -u
+
+grep 'processor' /proc/cpuinfo | sort -u

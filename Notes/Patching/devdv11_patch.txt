@@ -1,0 +1,46 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: devdb11.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected Custs	: Cloud Creek Systems
+
+-- Last Modified 	: 09/30/2016
+
+-- Description   	: Patching the standalone standard database
+
+-- Severity			: Critical
+
+-- Consequence		: Fix the bugs in database
+
+-- Action			: Go to oracle support, do prechecking, then follow the document
+
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+-- 1. Download the patch from metalink. PSU is the best choice. 
+
+-- 2. Look into the document and know how to patch it.
+
+-- 3. Update the OPatch if necessary(backup firstly), enough privileges
+
+-- 4. set up $ORACLE_HOME,$ORACLE_BASE, PATH for OPatch
+
+-- 5. opatch lsinventory --detail, need to rollback some patches firstly
+
+-- 6. opatch precheck to check the conflicts 
+
+-- 7. Before patch, shutdown the instance and listener
+
+-- 9. opatch apply for standalone database, opatch auto for GRID.
+
+-- 10. If everything is right, will return the success code. Check the error log
+
+-- 11. login as sysdba, startup instances, run scripts, Check the error log. 

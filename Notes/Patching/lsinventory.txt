@@ -1,0 +1,43 @@
+Oracle Interim Patch Installer version 11.2.0.3.4
+Copyright (c) 2012, Oracle Corporation.  All rights reserved.
+
+
+Oracle Home       : /u01/app/oracle/product/11.2.0.4/dbhome_1
+Central Inventory : /u01/app/oraInventory
+   from           : /u01/app/oracle/product/11.2.0.4/dbhome_1/oraInst.loc
+OPatch version    : 11.2.0.3.4
+OUI version       : 11.2.0.4.0
+Log file location : /u01/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch                                                                                                                     /opatch2016-09-29_13-39-57PM_1.log
+
+Lsinventory Output file location : /u01/app/oracle/product/11.2.0.4/dbhome_1/cfg                                                                                                                     toollogs/opatch/lsinv/lsinventory2016-09-29_13-39-57PM.txt
+
+--------------------------------------------------------------------------------
+Installed Top-level Products (1):
+
+Oracle Database 11g                                                  11.2.0.4.0
+There are 1 products installed in this Oracle Home.
+
+
+There are no Interim patches installed in this Oracle Home.
+
+
+--------------------------------------------------------------------------------
+
+OPatch succeeded.
+
+
+Composite patch 23054359 successfully applied.
+Log file location: /u01/app/oracle/product/11.2.0.4/dbhome_1/cfgtoollogs/opatch/opatch2016-09-30_09-25-13AM_1.log
+
+OPatch succeeded.
+
+Check the following log file for errors:
+/u01/app/oracle/cfgtoollogs/catbundle/catbundle_PSU_DEVDB11_APPLY_2016Sep30_09_32_05.log
+
+http://devdb11.cloudcreek.com:8080/apex/f?p=4550
+
+http://devdb11.cloudcreek.com:8080/apex/f?p=105
+
+http://stackoverflow.com/questions/10929524/how-to-add-text-to-an-image-in-java
+
+
