@@ -1,0 +1,15 @@
+###############################################################################
+
+## File Name     : script.sh
+
+## Author        : Alex(Zhouyang Zheng)
+
+## Call Syntax   : . script.sh OR ./script.sh OR sh script.sh(if executable)
+
+## Requirements  : Execution Privileges(chmod +x /path/script.sh)
+
+## Last Modified : 09/22/2016
+
+## Description   : Add it at the beginning of each shell script
+
+###############################################################################

@@ -1,0 +1,17 @@
+<!------------------------------------------------------------------------------
+
+** File Name    : *.html / *.htm
+
+** Author       : Alex (Zhouyang Zheng)
+
+** Corporation  : Cloud Creek Systems, Inc.
+
+** Call Syntax  : Run in the browser                             
+
+** Requirements : OS GUI / Browser
+
+** Modified     : 09/22/2016
+
+** Description  : Header version 1
+
+------------------------------------------------------------------------------->

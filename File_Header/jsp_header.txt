@@ -1,0 +1,16 @@
+<%------------------------------------------------------------------------------------------
+
+-- File Name     : script.sh
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Call Syntax   : . script.sh OR ./script.sh OR sh script.sh(if executable)
+
+-- Requirements  : JSP enginer
+
+-- Last Modified : 09/26/2016
+
+-- Description   : Add it at the beginning of jsp script
+
+
+------------------------------------------------------------------------------------------%>

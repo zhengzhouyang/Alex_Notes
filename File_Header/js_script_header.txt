@@ -1,0 +1,17 @@
+/******************************************************************************************************************************
+
+** File Name    : *.js
+
+** Author       : Alex (Zhouyang Zheng)
+
+** Corporation  : Cloud Creek Systems, Inc.
+
+** Call Syntax  : <script type="type/javascript" src=#></script> 
+
+** Requirements : UNKNOWN
+
+** Modified     : 09/22/2016
+
+** Description  : external JS file Header
+
+******************************************************************************************************************************/

@@ -1,0 +1,34 @@
+/******************************************************************************************************************************
+
+** File Name 	: *.java
+
+** Author 	: Alex (Zhouyang Zheng)
+
+** Corporation  : Cloud Creek Systems, Inc.
+
+** Call Syntax 	: javac *.java THEN  java filename(not include class) OR run in IDE
+
+** Requirements : JDK(Java Development Kit) & set up environment variables(JAVA_HOME,CLASSPATH,PATH) OR IDE
+
+** Modified 	: 09/22/2016
+
+** Description 	: version1
+
+******************************************************************************************************************************/
+
+/******************************************************************************************************************************
+
+** File Name    : *.java
+
+** Author       : Alex (Zhouyang Zheng)
+
+** Call Syntax  : javac *.java THEN  java filename(not include class) OR run in IDE
+
+** Requirements : IDE OR
+** Requirements : JDK(Java Development Kit) & set up environment variables(JAVA_HOME,CLASSPATH,PATH)
+
+** Modified     : 09/22/2016
+
+** Description  : version2
+
+******************************************************************************************************************************/
