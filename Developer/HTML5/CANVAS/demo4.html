@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<!--
+	
+		has to use beginPath function
+		
+		arc(x,y,r,startangle,endangle); 0 to 2 Math.PI
+	
+		fillStyle is not working for this case
+		
+	-->
+	<head>
+		<title>Draw Circle</title>
+	</head>
+	
+	<body>
+	
+		<canvas id="myCanvas" width="500px" height="500px" style="border: 1px solid #000000"></canvas>
+	
+		<script>
+			
+			var canvas = document.getElementById("myCanvas");
+			
+			var ctx = canvas.getContext("2d");
+			
+			ctx.beginPath();
+			
+			ctx.arc(95,50,300,0,2*Math.PI);
+	
+			ctx.stroke();
+			
+		</script>
+	
+	</body>
+
+</html>

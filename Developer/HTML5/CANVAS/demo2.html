@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+
+	fillRect(x,y,width,height);
+	
+	original point is left upper corner. The coordinate system is reverse in y axis.
+	
+-->
+<html>
+	<head>
+		<title>Demo2 for fill rectangle fuction</title>
+	</head>
+	<body>
+	
+		<canvas id="myCanvas" width="500px" height="500px" style="border: 1px solid #c3c3c3"></canvas>
+	
+		<script type="text/javascript">
+		
+			var myCanvas = document.getElementById("myCanvas");
+			var ctx = myCanvas.getContext("2d");
+			ctx.fillStyle = "#ff0000";
+			ctx.fillRect(10,10,200,100);
+			
+		</script>
+	
+	</body>
+
+</html>

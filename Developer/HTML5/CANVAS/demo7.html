@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<!--
+
+	drawText function practice
+
+-->
+
+
+
+<html>
+	<head>
+		
+		<title>Draw Text on Canvas</title>
+		
+		<style>
+		
+			#myCanvas
+			{
+				height:100%;
+				width:100%;
+			}
+	
+		</style>
+	
+	</head>
+
+	<body>
+		
+		<canvas id="myCanvas"></canvas>
+
+		<script>
+		
+			var canvas = document.getElementById("myCanvas");
+			
+			var ctx = canvas.getContext("2d");
+			
+			ctx.font="30px Comic Sans MS";
+			
+			ctx.textAlign="center";
+			
+			ctx.fillStyle="red";
+			
+			ctx.fillText("Hello World!", canvas.width/2, canvas.height/2);
+		
+		</script>
+		
+	</body>
+
+</html>

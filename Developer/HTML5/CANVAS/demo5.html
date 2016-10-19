@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--
+
+	Gardient function is used to fill color into shape
+
+-->
+
+
+<html>
+
+	<head>
+		<title>Gardient practice</title>
+		
+		<style>
+		
+			#myCanvas
+			{
+				heigth:100%;
+				width:100%;
+			}
+		
+		</style>
+	
+	</head>
+
+	<body>
+	
+		<canvas id="myCanvas"></canvas>
+			
+		<script>
+		
+			var canvas = document.getElementById("myCanvas");
+			
+			var ctx = canvas.getContext("2d");
+			
+			//create Gradient
+			var grd = ctx.createLinearGradient(0,0,200,0);
+			
+			grd.addColorStop(0,"red");
+			
+			grd.addColorStop(1,"white");
+			
+			ctx.fillStyle = grd;
+			
+			ctx.fillRect(0,0,1000,1000);
+		
+		</script>
+	
+	</body>
+	
+</html>
