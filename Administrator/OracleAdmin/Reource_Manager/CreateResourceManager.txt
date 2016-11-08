@@ -1,0 +1,126 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : CreateResourceManager.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : Notes
+
+-- Requirements  : SYS privileges
+
+-- Last Modified : 11/07/2016
+
+-- Description   : Create a Resource Manager(resource allocated)
+
+-------------------------------------------------------------------------------
+
+1. login as sys & create two users
+
+	CREATE USER web_user identified by web_user
+	  DEFAULT TABLESPACE users
+	  TEMPORARY TABLESPACE temp;
+
+	GRANT CONNECT TO web_user;
+
+	CREATE USER batch_user identified by batch_user
+	  DEFAULT TABLESPACE users
+	  TEMPORARY TABLESPACE temp;
+
+	GRANT CONNECT TO batch_user;
+
+2. PLSQL create pending area, create consumer group, create detail plans
+(resource allocated)
+
+	BEGIN
+	  DBMS_RESOURCE_MANAGER.clear_pending_area();
+	  DBMS_RESOURCE_MANAGER.create_pending_area();
+
+	  -- Create plan
+	  DBMS_RESOURCE_MANAGER.create_plan(
+		plan    => 'hybrid_plan',
+		comment => 'Plan for a combination of high and low priority tasks.');
+
+	  -- Create consumer groups
+	  DBMS_RESOURCE_MANAGER.create_consumer_group(
+		consumer_group => 'web_cg',
+		comment        => 'Web based OTLP processing - high priority');
+
+	  DBMS_RESOURCE_MANAGER.create_consumer_group(
+		consumer_group => 'batch_cg',
+		comment        => 'Batch processing - low priority');
+
+	  -- Assign consumer groups to plan and define priorities
+	  DBMS_RESOURCE_MANAGER.create_plan_directive (
+		plan             => 'hybrid_plan',
+		group_or_subplan => 'web_cg',
+		comment          => 'High Priority - level 1',
+		cpu_p1           => 100,
+		cpu_p2           => 0,
+		cpu_p3           => 0);
+
+	  DBMS_RESOURCE_MANAGER.create_plan_directive (
+		plan             => 'hybrid_plan',
+		group_or_subplan => 'batch_cg',
+		comment          => 'Low Priority - level 2',
+		cpu_p1           => 0,
+		cpu_p2           => 100,
+		cpu_p3           => 0);
+
+	  DBMS_RESOURCE_MANAGER.create_plan_directive(
+		plan             => 'hybrid_plan',
+		group_or_subplan => 'OTHER_GROUPS',
+		comment          => 'all other users - level 3',
+		cpu_p1           => 0,
+		cpu_p2           => 0,
+		cpu_p3           => 100);
+
+	  DBMS_RESOURCE_MANAGER.validate_pending_area;
+	  DBMS_RESOURCE_MANAGER.submit_pending_area();
+	END;
+	/
+
+3. resource plans are created. User session can alter resource plan, but in the following example 
+we set up the default group for each user.
+
+	BEGIN
+	  -- Assign users to consumer groups
+	  DBMS_RESOURCE_MANAGER_PRIVS.grant_switch_consumer_group(
+		grantee_name   => 'web_user',
+		consumer_group => 'web_cg',
+		grant_option   => FALSE);
+
+	  DBMS_RESOURCE_MANAGER_PRIVS.grant_switch_consumer_group(
+		grantee_name   => 'batch_user',
+		consumer_group => 'batch_cg',
+		grant_option   => FALSE);
+
+	  DBMS_RESOURCE_MANAGER.set_initial_consumer_group('web_user', 'web_cg');
+
+	  DBMS_RESOURCE_MANAGER.set_initial_consumer_group('batch_user', 'batch_cg');
+	END;
+	/
+
+4. check the current resource plan and alter it
+
+	SELECT NAME, IS_TOP_PLAN FROM V$RSRC_PLAN;
+	
+	ALTER SYSTEM SET RESOURCE_MANAGER_PLAN = hybrid_plan;
+	
+5. check the current user consumer group;
+
+	SELECT username, resource_consumer_group FROM v$session WHERE username IN ('WEB_USER','BATCH_USER');
+	
+6. Switch the user consume group;
+
+	DECLARE
+	  v_old_cg  VARCHAR2(30);
+	BEGIN
+	  DBMS_SESSION.switch_current_consumer_group (
+		new_consumer_group     => 'BATCH_CG',
+		old_consumer_group     => v_old_cg,
+		initial_group_on_error => FALSE);
+	END;
+	/
+

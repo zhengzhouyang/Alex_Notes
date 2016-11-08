@@ -1,0 +1,35 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : ResourceManagerInfoCheck.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : Notes
+
+-- Requirements  : SYS privileges
+
+-- Last Modified : 11/08/2016
+
+-- Description   : check the resource plan details and group info
+
+-------------------------------------------------------------------------------
+
+1.  displays the consumer groups granted to users or roles.
+
+	SELECT * FROM DBA_RSRC_CONSUMER_GROUP_PRIVS;
+	
+2. details about each resource plan
+
+	SELECT PLAN,COMMENTS,STATUS FROM DBA_RSRC_PLANS;
+	
+3.  display the consumer groups that are currently assigned to sessions
+
+	SELECT SID,SERIAL#,USERNAME,RESOURCE_CONSUMER_GROUP FROM V$SESSION;
+	
+4. 	displays the current top level plan and all of its descendent subplans
+
+	ALTER SYSTEM SET RESOURCE_MANAGER_PLAN = mydb_plan;
+	
+	SELECT NAME, IS_TOP_PLAN FROM V$RSRC_PLAN;

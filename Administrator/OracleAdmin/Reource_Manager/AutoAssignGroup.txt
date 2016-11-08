@@ -1,0 +1,69 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : AutoAssignGroup.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : Notes
+
+-- Requirements  : SYS privileges
+
+-- Last Modified : 11/08/2016
+
+-- Description   : Auto assign user to consumer group
+
+-------------------------------------------------------------------------------
+
+1. A session log in attribute
+
+	-- Login Attributes
+	oracle_user             CONSTANT VARCHAR2(30) := 'ORACLE_USER'
+	service_name            CONSTANT VARCHAR2(30) := 'SERVICE_NAME';
+	client_os_user          CONSTANT VARCHAR2(30) := 'CLIENT_OS_USER';
+	client_program          CONSTANT VARCHAR2(30) := 'CLIENT_PROGRAM';
+	client_machine          CONSTANT VARCHAR2(30) := 'CLIENT_MACHINE';
+
+	-- Runtime Attributes
+	module_name             CONSTANT VARCHAR2(30) := 'MODULE_NAME';
+	module_name_action      CONSTANT VARCHAR2(30) := 'MODULE_NAME_ACTION';
+	service_module          CONSTANT VARCHAR2(30) := 'SERVICE_MODULE';
+	service_module_action   CONSTANT VARCHAR2(30) := 'SERVICE_MODULE_ACTION';
+
+2. set consumer group according to log in attribute
+
+	BEGIN
+	  DBMS_RESOURCE_MANAGER.set_consumer_group_mapping (
+		attribute      => DBMS_RESOURCE_MANAGER.oracle_user,
+		value          => 'OLTP_USER',
+		consumer_group => 'OLTP_CONSUMER_GROUP');
+
+	  DBMS_RESOURCE_MANAGER.set_consumer_group_mapping (
+		attribute      => DBMS_RESOURCE_MANAGER.oracle_user,
+		value          => 'BATCH_USER',
+		consumer_group => 'BATCH_CONSUMER_GROUP');
+
+	  DBMS_RESOURCE_MANAGER.set_consumer_group_mapping (
+		attribute      => DBMS_RESOURCE_MANAGER.module_name,
+		value          => 'REPORT',
+		consumer_group => 'BATCH_CONSUMER_GROUP');
+	END;
+	/
+	
+3. set the privilege of each group, and switch group
+
+	BEGIN
+	  DBMS_RESOURCE_MANAGER.set_consumer_group_mapping_pri (
+		explicit              => 1,
+		oracle_user           => 2,
+		service_name          => 3,
+		client_os_user        => 4,
+		client_program        => 5,
+		client_machine        => 6,
+		module_name           => 7,
+		module_name_action    => 8,
+		service_module        => 9,
+		service_module_action => 10);
+	END;
+	/
