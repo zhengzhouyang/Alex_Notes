@@ -1,0 +1,201 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : BasicSecurity.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : notes
+
+-- Requirements  : SYS privileges
+
+-- Last Modified : 11/21/2016
+
+-- Description   : Datapump Practice
+
+-------------------------------------------------------------------------------
+
+Intro:
+Datapump can export or import objects, schemas or whole databse;
+
+1. Get ready with your schemas,you can unlock scott account.
+
+	CONN / AS SYSDBA
+	
+	ALTER USER scott IDENTIFIED BY tiger ACCOUNT UNLOCK;
+
+	CREATE OR REPLACE DIRECTORY test_dir AS '/u01/app/oracle/oradata/';
+	--you have to set up a directory for the export files, it is a pointer in the database points to a path in the file system
+	
+	GRANT READ, WRITE ON DIRECTORY test_dir TO scott;
+	
+2. Table exports/imports
+
+	--Runing this command in the OS terminal
+	--@db10g is not a dblink, dblink only exists in the database, see network link in the following
+	--@db10g only indicates that it is a remote database
+	
+	expdp scott/tiger@db10g tables=EMP,DEPT directory=TEST_DIR dumpfile=EMP_DEPT.dmp logfile=expdpEMP_DEPT.log
+	
+	
+	--When importing table, you have to make sure the dumpfile name is matched.
+	--You can import the table in any schemas that you have, but make sure your schema has proper privileges.
+	
+	impdp scott/tiger@db10g tables=EMP,DEPT directory=TEST_DIR dumpfile=EMP_DEPT.dmp logfile=impdpEMP_DEPT.log
+	
+	
+	--if this parameter is specfied in the clause, then the data will be appended into existing table.
+	
+	TABLE_EXISTS_ACTION=APPEND
+	
+3. TABLE_EXISTS_ACTION=APPEND
+	
+	expdp scott/tiger@db10g schemas=SCOTT directory=TEST_DIR dumpfile=SCOTT.dmp logfile=expdpSCOTT.log
+
+	impdp scott/tiger@db10g schemas=SCOTT directory=TEST_DIR dumpfile=SCOTT.dmp logfile=impdpSCOTT.log
+	
+4. Database Exports/Imports
+	
+	expdp system/password@db10g full=Y directory=TEST_DIR dumpfile=DB10G.dmp logfile=expdpDB10G.log
+
+	impdp system/password@db10g full=Y directory=TEST_DIR dumpfile=DB10G.dmp logfile=impdpDB10G.log
+	
+5. INCLUDE and EXCLUDE
+
+	--include
+	expdp scott/tiger@db10g schemas=SCOTT include=TABLE:"IN ('EMP', 'DEPT')" directory=TEST_DIR dumpfile=SCOTT.dmp logfile=expdpSCOTT.log
+
+	--exclude
+	expdp scott/tiger@db10g schemas=SCOTT exclude=TABLE:"= 'BONUS'" directory=TEST_DIR dumpfile=SCOTT.dmp logfile=expdpSCOTT.log
+	
+	--include syntax
+	INCLUDE=TABLE,VIEW,PACKAGE:"LIKE '%API'"
+	or
+	INCLUDE=TABLE
+	INCLUDE=VIEW
+	INCLUDE=PACKAGE:"LIKE '%API'"
+	
+	--exclude syntax
+	EXCLUDE=SCHEMA:"LIKE 'SYS%'"
+	EXCLUDE=SCHEMA:"IN ('OUTLN','SYSTEM','SYSMAN','FLOWS_FILES','APEX_030200','APEX_PUBLIC_USER','ANONYMOUS')"
+	
+6. CONTENT and QUERY
+	
+	--METADATA_ONLY 	METADATA of the schema without data
+	expdp system/password@db10g schemas=SCOTT directory=TEST_DIR dumpfile=scott_meta.dmp logfile=expdp.log content=METADATA_ONLY
+	
+	--DATA_ONLY			DATA only without METADATA
+	expdp system/password@db10g schemas=SCOTT directory=TEST_DIR dumpfile=scott_data.dmp logfile=expdp.log content=DATA_ONLY
+	
+	--The QUERY parameter allows you to alter the rows exported from one or more tables, change the data of specific table
+	expdp system/password@db10g full=Y directory=TEST_DIR dumpfile=full.dmp logfile=expdp_full.log query=SCOTT.EMP,SCOTT.DEPT:'"WHERE ROWNUM = 0"'
+	
+7. Exports/Imports through DB Link
+
+	CONN / AS SYSDBA
+	GRANT CREATE DATABASE LINK TO test;
+
+	CONN test/test
+	CREATE DATABASE LINK remote_scott CONNECT TO scott IDENTIFIED BY tiger USING 'DEV';
+	
+	--To make it works, Both the local and remote users require the EXP_FULL_DATABASE role granted to them.
+	expdp test/test@db10g tables=SCOTT.EMP network_link=REMOTE_SCOTT directory=TEST_DIR dumpfile=EMP.dmp logfile=expdpEMP.log
+	
+	--Both the local and remote users require the IMP_FULL_DATABASE role granted to them.
+	impdp test/test@db10g tables=SCOTT.EMP network_link=REMOTE_SCOTT directory=TEST_DIR logfile=impdpSCOTT.log remap_schema=SCOTT:TEST
+	
+8. Flashback Exports
+
+	expdp ..... flashback_time=systimestamp
+
+	# In parameter file.
+	flashback_time="to_timestamp('09-05-2011 09:00:00', 'DD-MM-YYYY HH24:MI:SS')"
+
+	# Escaped on command line.
+	expdp ..... flashback_time=\"to_timestamp\(\'09-05-2011 09:00:00\', \'DD-MM-YYYY HH24:MI:SS\'\)\"
+	
+	--if you prefer to use SCN
+	SELECT current_scn FROM v$database;
+	SELECT DBMS_FLASHBACK.get_system_change_number FROM dual;
+	SELECT TIMESTAMP_TO_SCN(SYSTIMESTAMP) FROM dual;
+	
+	expdp ..... flashback_scn=5474280
+	
+	SELECT TIMESTAMP_TO_SCN(SYSTIMESTAMP) FROM dual;
+	SELECT SCN_TO_TIMESTAMP(5474751) FROM dual;
+	
+9. Data Pump API
+
+	SET SERVEROUTPUT ON SIZE 1000000
+	DECLARE
+	  l_dp_handle       NUMBER;
+	  l_last_job_state  VARCHAR2(30) := 'UNDEFINED';
+	  l_job_state       VARCHAR2(30) := 'UNDEFINED';
+	  l_sts             KU$_STATUS;
+	BEGIN
+	  l_dp_handle := DBMS_DATAPUMP.open(
+		operation   => 'EXPORT',
+		job_mode    => 'SCHEMA',
+		remote_link => NULL,
+		job_name    => 'EMP_EXPORT',
+		version     => 'LATEST');
+
+	  DBMS_DATAPUMP.add_file(
+		handle    => l_dp_handle,
+		filename  => 'SCOTT.dmp',
+		directory => 'TEST_DIR');
+
+	  DBMS_DATAPUMP.add_file(
+		handle    => l_dp_handle,
+		filename  => 'SCOTT.log',
+		directory => 'TEST_DIR',
+		filetype  => DBMS_DATAPUMP.KU$_FILE_TYPE_LOG_FILE);
+
+	  DBMS_DATAPUMP.metadata_filter(
+		handle => l_dp_handle,
+		name   => 'SCHEMA_EXPR',
+		value  => '= ''SCOTT''');
+
+	  DBMS_DATAPUMP.start_job(l_dp_handle);
+
+	  DBMS_DATAPUMP.detach(l_dp_handle);
+	END;
+	/
+	
+	--This script is used to check data pump job status
+	select * from dba_datapump_jobs;
+	
+10. External TABLE
+
+	CREATE TABLE emp_xt
+  ORGANIZATION EXTERNAL
+   (
+     TYPE ORACLE_DATAPUMP
+     DEFAULT DIRECTORY test_dir
+     LOCATION ('emp_xt.dmp')
+   )
+   AS SELECT * FROM emp;
+   
+   DROP TABLE emp_xt;
+
+	CREATE TABLE emp_xt (
+	  EMPNO     NUMBER(4),
+	  ENAME     VARCHAR2(10),
+	  JOB       VARCHAR2(9),
+	  MGR       NUMBER(4),
+	  HIREDATE  DATE,
+	  SAL       NUMBER(7,2),
+	  COMM      NUMBER(7,2),
+	  DEPTNO    NUMBER(2))
+	  ORGANIZATION EXTERNAL (
+		 TYPE ORACLE_DATAPUMP
+		 DEFAULT DIRECTORY test_dir
+		 LOCATION ('emp_xt.dmp')
+	  );
+
+	SELECT * FROM emp_xt;
+	
+More reference:https://oracle-base.com/articles/10g/oracle-data-pump-10g	
+
+	
