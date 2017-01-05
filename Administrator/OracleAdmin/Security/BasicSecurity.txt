@@ -1,0 +1,72 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : BasicSecurity.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : notes
+
+-- Requirements  : SYS privileges
+
+-- Last Modified : 11/08/2016
+
+-- Description   : Profile Practice
+
+-------------------------------------------------------------------------------
+
+1. exising schema in the oracle database
+
+	SELECT * FROM dba_users_with_defpwd ORDER BY username;
+	
+2. Lock Or Unlock account
+
+	ALTER USER scott ACCOUNT UNLOCK;
+	
+	ALTER USER scott ACCOUNT LOCK;
+	
+3. Password Aging, Expiration and History
+
+	CREATE PROFILE my_profile LIMIT
+	  FAILED_LOGIN_ATTEMPTS 3  -- Account locked after 3 failed logins.
+	  PASSWORD_LOCK_TIME 5     -- Number of days account is locked for. UNLIMITED required explicit unlock by DBA.
+	  PASSWORD_LIFE_TIME 30    -- Password expires after 90 days.
+	  PASSWORD_GRACE_TIME 3    -- Grace period for password expiration.
+	  PASSWORD_REUSE_TIME 120  -- Number of days until a specific password can be reused. UNLIMITED means never.
+	  PASSWORD_REUSE_MAX 10    -- The number of changes required before a password can be reused. UNLIMITED means never.
+	/
+
+	ALTER USER scott PROFILE my_profile;	
+	
+4. Advanced password verification
+   Create a function that only allow 8-digits or longer passowrd.
+   Then assign it to USER scott
+
+	CREATE OR REPLACE FUNCTION my_verification_function (
+	  username      VARCHAR2,
+	  password      VARCHAR2,
+	  old_password  VARCHAR2)
+	  RETURN BOOLEAN AS
+	BEGIN
+	  IF LENGTH(password) < 8 THEN
+		RETURN FALSE;
+	  ELSE
+		RETURN TRUE;
+	  END IF;
+	END my_verification_function;
+	/
+	
+	ALTER PROFILE my_profile LIMIT
+	PASSWORD_VERIFY_FUNCTION my_verification_function;
+
+5. Revoke the privileges from role.
+
+	REVOKE CREATE DATABASE LINK FROM connect;
+	REVOKE EXECUTE ON utl_tcp FROM public;
+	REVOKE EXECUTE ON utl_smtp FROM public;
+	REVOKE EXECUTE ON utl_http FROM public;
+	REVOKE EXECUTE ON utl_mail FROM public;
+	REVOKE EXECUTE ON utl_inaddr FROM public;
+	REVOKE EXECUTE ON utl_file FROM public;
+	REVOKE EXECUTE ON dbms_java FROm public;

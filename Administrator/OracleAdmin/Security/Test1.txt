@@ -1,0 +1,28 @@
+col sample_time format a30
+set lines 150
+set pages 5000
+select sample_time,instance_number,session_id,sql_id,wait_time,time_waited,event from dba_hist_active_sess_history 
+ where event = 'latch: cache buffers chains' and sample_time between to_date('2016-11-18 13:35','yyyy-mm-dd hh24:mi') and to_date('2016-11-18 13:50','yyyy-mm-dd hh24:mi')
+order by sample_time,instance_number;
+
+
+select sql_id,sum(wait_time), sum(time_waited) from dba_hist_active_sess_history 
+ where event = 'latch: cache buffers chains' and sample_time between to_date('2016-11-18 13:35','yyyy-mm-dd hh24:mi') and to_date('2016-11-18 13:50','yyyy-mm-dd hh24:mi')
+group by sql_id order by 3;
+
+
+col sample_time format a30
+set lines 150
+set pages 5000
+select sample_time,instance_number,session_id,sql_id,wait_time,time_waited,event from dba_hist_active_sess_history 
+ where sample_time between to_date('2016-11-18 13:41','yyyy-mm-dd hh24:mi') and to_date('2016-11-18 13:44','yyyy-mm-dd hh24:mi')
+order by sample_time,instance_number;
+
+
+select sql_id,sum(wait_time), sum(time_waited) from dba_hist_active_sess_history 
+ where sample_time between to_date('2016-11-18 13:35','yyyy-mm-dd hh24:mi') and to_date('2016-11-18 13:50','yyyy-mm-dd hh24:mi')
+group by sql_id order by 3;
+
+select sample_time,instance_number,session_id,sql_id,wait_time,time_waited,event from dba_hist_active_sess_history 
+ where event = 'latch: cache buffers chains'
+order by sample_time,instance_number;
