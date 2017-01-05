@@ -1,0 +1,61 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : files_multiplexing.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Call Syntax   : Notes
+
+-- Requirements  : DBA roles
+
+-- Last Modified : 01/04/2017
+
+-- Description   : Control files & Redo files multiplexing
+
+-------------------------------------------------------------------------------
+
+
+-------******* Control Files Multiplexing *******-------
+
+-- set multiplexed control file
+
+	alter system 
+		set control_files = '/u01/oracle/oradata/ctl01.ctl,
+			/u02/oradata/oradata/ctl02.ctl'
+	scope=spfile;
+
+-- Check the name,path of control files
+	
+	select value from v$spparameter where name = 'control_files';
+	
+	select name,status from v$control_file;
+	
+-------******************************************-------	
+
+
+
+-------******* Redo Log Files Multiplexing *******-------
+	
+
+-- Add new member into one group
+	
+	alter database 
+		add logfile member '/u01/oracle/oradata/redo01.log'
+		to group 3;
+
+-- Create a new redo group
+			
+	alter database
+		add logfile group 5
+		('/u02/oradata/oradata/redo10.log',
+		'/u03/oradata/oradata/redo11.log') size 250m;
+	
+-------******************************************-------		
+	
+
+
+	
+-- 
+
+
+--

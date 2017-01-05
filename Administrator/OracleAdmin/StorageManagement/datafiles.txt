@@ -1,0 +1,85 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : datafiles.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Call Syntax   : Notes
+
+-- Requirements  : DBA roles
+
+-- Last Modified : 01/04/2017
+
+-- Description   : Datafiles management
+
+-------------------------------------------------------------------------------
+
+-------************** Modify Datafiles **************-------
+
+-- Resize datafiles
+	
+	alter database 
+		datafile '/u01/app/oracle/oradata/users01.dbf' resize 100m;
+		
+-- Alter datafile into autoextend mode
+
+	alter database 
+		datafile '/u01/app/oracle/oradata/users01.dbf'
+		autoextend on
+		next 20m
+		maxsize 1g;
+
+-- Add a new datafile into tablespace
+	
+	alter tablespace users
+		add datafile '/u01/app/oracle/oradata/users01.dbf'
+		size 100m
+		autoextend on
+		next 20m
+		maxsize 200m;
+
+-- Resize bigfile tablespace(only)
+	
+	alter tablepsace dmarts resize 1g;
+	
+-------**********************************************-------
+
+
+
+-------************** Move Datafiles **************-------
+
+-- Check the datafile under some specific tablespace
+	
+	select d.name from
+		v$datafile d join v$tablespace t using(ts#)
+		where t.name='&ts_name';
+
+-- If not sure about tablespace name;
+
+	select tablepsace_name from dba_tablespace;
+	
+-- Before 12c, need to shutdown database to move data file
+
+	shutdown immediate;
+	
+-- If using SQLPLUS move file
+
+	! mv /u04/oradata/dfile01.dbf /u06/oradata/
+
+	startup mount
+	
+	alter database rename file 
+		'/u04/oradata/dfile01.dbf' to
+		'/u06/oradata/dfile01.dbf';
+
+	alter database open;
+	
+-- backup controlfile into trace when it is done.	
+	alter database backup controlfile to trace;
+
+-------********************************************-------
+
+
+alter database tempfile '/oradata/dwprod/temp02.dbf' autoextend on maxsize unlimited;
+alter database tempfile '/oradata/dwprod/temp03.dbf'autoextend on maxsize 24G;
+

@@ -1,0 +1,142 @@
+EXAMPLE OF HOW TO RESIZE THE ONLINE REDO LOGS:
+==============================================
+
+Often times the online redo logs are sized too small causing database
+performance problems.
+
+The following is an example of how to resize the online log groups:
+
+NOTE:  Examples are given for 9i and higher.   In prior releases, you needed
+to use Server Manager and connect as the internal user.
+
+1. First see the size of the current logs:             
+               
+   > sqlplus /nolog
+   SQL> connect / as sysdba 
+
+   SQL> select group#, bytes, status from v$log; 
+   GROUP#     BYTES      STATUS                    
+   ---------- ---------- ----------------                      
+            1    1048576 INACTIVE                        
+            2    1048576 CURRENT                          
+            3    1048576 INACTIVE                           
+                              
+    Logs are 1MB from above, let's size them to 10MB.                                
+                                  
+
+2. Retrieve all the log member names for the groups:                                           
+                                                    
+   SQL> select group#, member from v$logfile;                                    
+                                                       
+            GROUP# MEMBER                                                         
+   --------------- ----------------------------------------                        
+                 1 /usr/oracle/dbs/log1PROD.dbf                                    
+                 2 /usr/oracle/dbs/log2PROD.dbf                                    
+                 3 /usr/oracle/dbs/log3PROD.dbf                                    
+                                                               
+                                                                
+3. In older versions of the database you needed to shutdown and issue the following
+   commands in restricted mode.   You can still do this, but the database can be online
+   to perform these changes.
+
+   Let's create 3 new log groups and name them groups 4, 5, and 6, each 10MB in
+   size:                           
+                            
+   SQL> alter database add logfile group 4                              
+           '/usr/oracle/dbs/log4PROD.dbf' size 10M;                                 
+                                 
+   SQL> alter database add logfile group 5                                  
+           '/usr/oracle/dbs/log5PROD.dbf' size 10M;     
+        
+   SQL> alter database add logfile group 6          
+           '/usr/oracle/dbs/log6PROD.dbf' size 10M;   
+        
+
+4. Now run a query to view the v$log status:                                   
+                                                                         
+   SQL> select group#, status from v$log;                                       
+
+      GROUP# STATUS
+   --------- ----------------
+           1 INACTIVE
+           2 CURRENT
+           3 INACTIVE            
+           4 UNUSED
+           5 UNUSED
+           6 UNUSED         
+      
+   From the above we can see log group 2 is current, and this is one of the
+   smaller groups we must drop. Therefore let's switch out of this group into
+   one of the newly created log groups.                  
+                   
+
+5. Switch until log group 4, so we can drop log groups 1, 2, and 3:                                  
+    
+   SQL> alter system switch logfile;          
+   ** repeat as necessary until group 4 is CURRENT **
+                                                            
+                                                             
+6. Run the query again to verify the current log group is group 4:                                                            
+                                                                
+   SQL> select group#, status from v$log;                                       
+                                                                  
+      GROUP# STATUS
+   --------- ----------------
+           1 INACTIVE
+           2 INACTIVE
+           3 INACTIVE            
+           4 CURRENT
+           5 UNUSED
+           6 UNUSED                          
+
+ Note: redo log Group 1 or 2 or 3 can be active after "alter system switch log file" which means could not be dropped, in this case, 
+you need to do "alter system checkpoint" to make redo log groups 1,2 and 3 inactive.                          
+                                                  
+7. Now drop redo log groups 1, 2, and 3:     
+
+   SQL> alter database drop logfile group 1;                                    
+   SQL> alter database drop logfile group 2;                                    
+   SQL> alter database drop logfile group 3;                                    
+                                   
+   Verify the groups were dropped, and the new groups' sizes are correct.
+
+   SVRMGR> select group#, bytes, status from v$log;
+
+      GROUP#     BYTES STATUS
+   --------- --------- ----------------
+           4  10485760 CURRENT
+           5  10485760 UNUSED
+           6  10485760 UNUSED            
+
+
+   
+8.  At this point, you consider taking a backup of the database.
+
+9.  You can now go out to the operating system and delete the files associated
+    with redo log groups 1, 2, and 3 in step 2 above as they are no longer
+    needed:
+    
+    % rm /usr/oracle/dbs/log1PROD.dbf
+    % rm /usr/oracle/dbs/log2PROD.dbf  
+    % rm /usr/oracle/dbs/log3PROD.dbf                                                 
+                                                  
+   Monitor the alert.log for the times of redo log switches. Due to increased
+   redo log size, the groups should not switch as frequently under the same 
+   load conditions. 
+
+
+References:
+===========
+
+Chapter 6 of the Oracle8i Administrator's Guide, Release 8.1.5,
+Part No. A67772-01 for further information on redo log maintenance.
+
+Chapter 7 of the Oracle 9i Administrator's guide
+Part No. A96521-01 for further information on redo log maintenance.
+
+
+Chapter 6 of the Oracle 10g Administrator's guide
+Part No. B10739-01 for further information on redo log maintenance.
+
+Chapter 10 of the Oracle 11g Administrator's guide
+Part No. B28310-04 for further information on redo log maintenance.
