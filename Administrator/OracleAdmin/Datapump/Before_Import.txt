@@ -1,0 +1,39 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : Before_Import.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : notes
+
+-- Requirements  : SYS privileges
+
+-- Last Modified : 12/27/2016
+
+-- Description   : Before_Import 
+
+-------------------------------------------------------------------------------
+
+Notes:
+
+1. A directory is the first requirment!
+
+2. export as sysdba is not allowed!
+
+3. RAC always only allow one data pump job running
+
+You have to check the user privileges
+
+--select * from user_sys_privs;
+
+--select * from user_tab_privs;
+
+--select * from user_role_privs;
+
+The import schema should have the same privileges
+
+You also have to check the tablespace, should be the same name
+
+--select USERNAME, DEFAULT_TABLESPACE, TEMPORARY_TABLESPACE from DBA_USERS where USERNAME='&UN';
