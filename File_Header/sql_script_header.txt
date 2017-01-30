@@ -10,7 +10,7 @@
 
 -- Requirements  : Access Privileges
 
--- Last Modified : 09/22/2016
+-- Last Modified : 01/04/2017
 
 -- Description   : Add it at the beginning of each sql script
 
