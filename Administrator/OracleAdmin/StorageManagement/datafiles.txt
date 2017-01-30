@@ -6,13 +6,15 @@
 
 -- Call Syntax   : Notes
 
--- Requirements  : DBA roles
+-- Requirements  : DBA privileges
 
--- Last Modified : 01/04/2017
+-- Last Modified : 01/12/2017
 
 -- Description   : Datafiles management
 
 -------------------------------------------------------------------------------
+
+
 
 -------************** Modify Datafiles **************-------
 
@@ -47,6 +49,7 @@
 
 
 -------************** Move Datafiles **************-------
+-------************** Shutdwon    DB **************-------
 
 -- Check the datafile under some specific tablespace
 	
@@ -75,7 +78,54 @@
 	alter database open;
 	
 -- backup controlfile into trace when it is done.	
+
 	alter database backup controlfile to trace;
+
+-------********************************************-------
+
+
+
+-------************** Move Datafiles **************-------
+-------************** Tablespace off **************-------
+
+-- make tablepsace offline 
+
+	alter tablepsace ts_name offline;
+
+-- move datafile from one location to other 
+
+	! mv /u06/oradata/test.dbf /u05/oradata/test.dbf
+
+-- rename the datafile
+
+	alter tablespace ts_name rename datafile
+		'u06/oradata/test.dbf' to '/u05/oradata/test.dbf';
+
+-- make tablespace online
+	
+	alter tablespace ts_name online
+
+-------********************************************-------
+
+
+
+-------************ 12c Move Datafiles ************-------
+-------********************************************-------
+
+-- 12c can move datafiles when database is online
+
+	alter database move datafile 'path1' to 'path2';
+
+-- Some options
+
+	The REUSE keyword indicates the new file should be created even if it already exists.
+	 
+	The KEEP keyword indicates the original copy of the datafile should be retained.
+	 
+	When the source file is an OMF file the KEEP option can not be used
+	 
+	If the destination file is an OMF file, the TO clause can be omitted, file in DB_CREATE_FILE_DEST
+
 
 -------********************************************-------
 
