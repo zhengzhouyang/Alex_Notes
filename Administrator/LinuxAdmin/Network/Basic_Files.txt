@@ -1,0 +1,72 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: Basic_Files.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Affected OS		: Linux
+
+-- Last Modified 	: 02/06/2016
+
+-- Description   	: Network Files In Linux
+
+-- Severity			: Critical/Warning/Informational 
+
+-------------------------------------------------------------------------------
+
+# Network Interfaces
+	
+	每个网卡在/etc/sysconfig/network-scripts下都有一个对应的文件ifcfg-interface
+	比如：ifcfg-eth0, ifcfg-lo(localhost地址)
+	
+	DHCP：
+		DEVICE="eth0" <===========================Name of Network Interface
+		NM_CONTROLLED="yes"<===========================Whether network interface is controlled by the network management daemon
+		ONBOOT=yes
+		USERCTL=no<===========================Whether users other than root can control the state of this interface
+		TYPE=Ethernet
+		BOOTPROTO=dhcp
+		DEFROUTE=yes<===========================Whether this interface is the default route
+		IPV4_FAILURE_FATAL=yes<===========================Whether the device is disabled if IPv4 configuration fails
+		IPV6INIT=no
+		NAME="System eth0"
+		UUID=5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03
+		HWADDR=08:00:27:16:C3:33
+		PEERDNS=yes<===========================Whether the /etc/resolv.conf file used for DNS resolution contains information obtained from the DHCP server
+		PEERROUTES=yes<===========================Whether the information for the routing table entry that defines the default gateway for the interface is obtained from the DHCP server
+		
+	static ip:(其他都不变，把BOOTPROTO改成none)
+		BOOTPROTO=none
+		IPADDR=192.168.1.101<===========================IPv4 address of the interface
+		NETMASK=255.255.255.0
+		BROADCAST=192.168.1.255
+		
+
+# Network Configuration Files
+
+	1 /etc/hosts
+		resolve the IP address of a host given its name
+	
+	2 /etc/nsswitch.conf
+		how system uses jake resolution mechanisms
+	
+	3 /etc/resolv.conf
+		how system uses DNS to resolve host name and IP addresses.
+		
+		e.g.
+			search us.mydomain.com mydomain.com
+			nameserver 192.168.154.3
+			nameserver 192.168.154.4
+			nameserver 10.216.106.3
+	
+	4 /etc/sysconfig/network
+			specifies additional information that is valid to all network interfaces on the system.
+			
+		e.g.	
+			NETWORKING=yes
+			NETWORKING_IPV6=no
+			HOSTNAME=host20.mydomain.com
+			GATEWAY=192.168.1.1
+		
