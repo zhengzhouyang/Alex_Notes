@@ -1,0 +1,61 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: Monitoring_CPU_USAGE.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected OS		: Linux
+
+-- Last Modified 	: 02/01/2016
+
+-- Description   	: CPU statistics
+
+-- Severity			: Critical/Warning/Informational 
+
+-------------------------------------------------------------------------------
+
+#CPU usage statistics for each CPU core and averaged across all CPU cores
+	
+	--command--
+	mpstat -P ALL
+	
+	sar -u -P ALL
+	--command--
+	
+	if %idle is near 0%, that means CPU bound is hit.
+	
+	%system or %sys is for running system code, the usage should not exceed 30%
+	
+#Load Average	
+	
+	Load average represent running processes, waitting to run, and waiting for disk I/O processes on CPU cores
+	
+	It should be not over 2 times of total number of CPU cores over 5 and 15 minutes
+	
+	If the load average exceeds four times the number of CPU cores for long periods, the system is overloaded.
+	
+	--command
+	
+	1. uptime
+		summary
+		
+	2. sar -q
+		column runq-sz stands for run-queue size, it indicates CPU saturation
+		column plist_size indicates total number of processes
+		
+	When CPU capacity is insufficient for the workload, run top or dstat to check the most expensive processes
+	
+	3. dstat --top-cpu --top-mem --top-bio(requries dstat package)
+	the above dstat command shows which processes are using CPUs, memory, and block I/O most intensively
+	
+	4. top
+	real-time display of CPU activity
+	f - choosing column
+	o - column location
+	O - sorting based on one column
+	
+	

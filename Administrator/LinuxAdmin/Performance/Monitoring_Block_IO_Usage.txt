@@ -1,0 +1,41 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: Monitoring_Block_IO_Usage.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected OS		: Linux
+
+-- Last Modified 	: 02/01/2016
+
+-- Description   	: Block I/O statistics
+
+-- Severity			: Critical/Warning/Informational 
+
+-------------------------------------------------------------------------------
+
+#Block I/O Statistics
+
+	iostat -x 
+	
+	sar -d
+	
+		%util is the percentage of CPU time spent handling I/O requests to a device
+	
+		avgqu-sz is the average queue length of I/O requests that were issued to that device
+	
+		*Conclusion:If %util approaches 100% or avgqu-sz is greater than 1, device saturation is occurring.		
+		
+#iotop utility can help you identify which processes are responsible for excessive disk I/O(Requires iotop package)
+
+	iotop has the similar interface to top utility
+	
+		left and right arrow keys to change the sort field
+		 
+		A to toggle the I/O units between bytes per second and total number of bytes
+		 
+		O to toggle between displayingall processes or only those processes that are performing I/O

@@ -1,0 +1,29 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: Monitoring File System Usage.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected OS		: Linux
+
+-- Last Modified 	: 02/01/2016
+
+-- Description   	: File System Usage
+
+-- Severity			: Critical/Warning/Informational 
+
+-------------------------------------------------------------------------------
+
+#File System Usage
+	
+	sar -v
+	
+		number of unused cache entries in the directory cache (dentunusd)
+		the numbers of in-use file handles (file-nr)
+		inode handlers (inode-nr)
+		and pseudo terminals(pty-nr)
+		

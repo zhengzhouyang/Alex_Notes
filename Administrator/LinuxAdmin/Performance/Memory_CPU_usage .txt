@@ -1,0 +1,53 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: Memory_CPU_USAGE.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected OS		: Linux
+
+-- Last Modified 	: 02/01/2016
+
+-- Description   	: Memory statistics
+
+-- Severity			: Critical/Warning/Informational 
+
+-------------------------------------------------------------------------------
+
+#memory utilization statistics
+	
+	sar -r
+	
+		%memused is the percentage of physical memory in use
+	
+#memory paging statistics
+
+	sar -B
+	
+		pgscank/s is the number of memory pages scanned by the kswapd daemon per second
+	 
+		pgscand/s is the number of memory pagesscanned directly per second
+
+#swapping statistics
+
+	sar -W
+		
+		 pswpin/s and pswpout/s, which are the numbers of pages per second swapped in and out per second.
+
+#Conclusion
+	*If %memused is near 100% and the scan rate is continuously over 200 pages per second, the system has a memory shortage	
+	
+	*Out of physcial memory, performance degrade
+
+	*Out of swap space, OS or Application are likely to crash
+
+	If free or top indicate that little swap space remains available, this is also an indication you are running low on memory.
+
+	The output from the dmesg command might include notification of any problems with physical memory that were detected at boot time.
+
+	
+	

@@ -1,0 +1,30 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: Monitoring Network Usage.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected OS		: Linux
+
+-- Last Modified 	: 02/01/2016
+
+-- Description   	: File System Usage
+
+-- Severity			: Critical/Warning/Informational 
+
+-------------------------------------------------------------------------------
+
+#Network Usage
+	
+	ip -s link
+	
+		the numbers of bytes transmitted (TX) and received (RX)
+		
+		The dropped and overrun fields provide an indicator of network interface saturation
+		
+	The ss -s command displays summary statistics for each protocol.
+		
