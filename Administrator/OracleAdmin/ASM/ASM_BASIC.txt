@@ -1,0 +1,130 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: ASM_BASIC.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Testing Env		: rac1.localdomain on muira
+
+-- Last Modified 	: 01/30/2016
+
+-- Description   	: basic operation for asm
+
+-- Severity			: Critical
+
+-- Consequence		: Testing
+
+-------------------------------------------------------------------------------
+
+
+
+-----------------------------Set up Env---------------------------------------
+
+1. login as oracle
+
+2. . oraenv
+
+3. +ASM1 based on nodes
+
+4. sqlplus / as sysasm;
+
+4. running any commands to test
+
+-------------------------------------------------------------------------------
+
+
+
+-----------------------------Add a directory in ASM----------------------------
+
+Method 1: Using SQL
+	
+	1. login as sysdba;
+	
+	2. alter diskgroup DATA
+			add directory '+DATA/somename';
+
+Methold 2: Using asmcmd
+
+	1. asmcmd
+	
+	2. cd to path then mkdir name
+	
+-------------------------------------------------------------------------------
+
+
+
+----------------------Create a tablespace using template-----------------------
+
+1. using datafile template, COARSE stripng and default MIRROR
+	create tablespace users1 datafile '+DATA(datafile)';
+
+2. using default template.	
+	create tablespace users2 datafile '+DATA';
+	
+3. using onlinelog template for datafile, fine stripng and default MIRROR
+	create tablespace users3 datafile '+DATA(onlinelog)';
+	
+-------------------------------------------------------------------------------	
+
+
+
+-------------------------------Query ASM views--------------------------------
+
+#Query v$asm_disk, you can see all raw device in diskgroup or in spare
+
+	select
+			group_number,
+			disk_number,
+			name,
+			failgroup,
+			create_date,
+			path
+	from 
+			v$asm_disk;
+
+##############################################################################
+			
+	select
+			group_number,
+			name,
+			type,
+			total_mb,
+			free_mb
+	from
+			v$asm_diskgroup;
+
+			
+if the group number is 0, that means the disk is raw and unmounted
+			
+------------------------------------------------------------------------------
+
+
+
+-----------------------------Create ASM DiskGroup-----------------------------
+
+#Create high redundancy disk group
+
+	create diskgroup &group_name high redundancy
+			failgroup fg1 disk '/dev/raw/raw5' name d2a
+			failgroup fg2 disk '/dev/raw/raw6' name d2b
+			failgroup fg3 disk '/dev/raw/raw7' name d2c
+			...........................................;
+	
+high redundancy disk group need at least 3 disks or more
+
+------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+

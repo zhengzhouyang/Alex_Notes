@@ -1,0 +1,102 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: ASM_Rebalance.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Testing Env		: rac1.localdomain on muira
+
+-- Last Modified 	: 02/09/2016
+
+-- Description   	: asm rebalance
+
+-- Severity			: Critical
+
+-- Consequence		: Testing
+
+-------------------------------------------------------------------------------
+
+
+
+-------------------------Add a raw disk into diskgroup-------------------------
+
+#create a new failgroup in diskgroup data by add a new raw device
+	
+	alter diskgroup data
+		add failgroup d1fg3 disk '/dev/raw/raw8' name d1c;
+
+#check the rebalance operation
+
+	select
+			group_number,
+			operation,
+			state,
+			power,
+			actual,
+			sofar,
+			est_work,
+			est_rate,
+			est_minutes
+	from
+			v$asm_operation;
+
+#change the rebalance power
+	
+	alter diskgroup data rebalance power 8;
+	
+#Then check the asm_operation again
+
+#check the new disk configuration
+
+	select
+			group_number,
+			disk_number,
+			name,
+			failgroup,
+			create_date,
+			path
+	from
+			v$asm_disk;
+
+-------------------------------------------------------------------------------
+
+
+
+-------------------------------Other ASM sql-----------------------------------
+
+	alter diskgroup ..... drop disk
+
+#remove old disk and add new disk in one command
+
+	alter diskgroup ..... drop .... add
+
+	alter diskgroup ..... mount
+	
+	alter diskgroup ..... dismount
+
+#verifies the internal consisitency of the disk group
+	alter diskgroup ..... check all
+
+-------------------------------------------------------------------------------
+
+
+
+-----------------------------------asmcmd---------------------------------------
+
+12c:
+		https://docs.oracle.com/cd/E11882_01/server.112/e18951/asm_util001.htm#OSTMG01610
+		
+11g:
+		https://docs.oracle.com/cd/E11882_01/server.112/e18951/asm_util001.htm#OSTMG01610
+		
+10g:
+		https://docs.oracle.com/cd/B19306_01/server.102/b14215/asm_util.htm
+
+
+
+
+
