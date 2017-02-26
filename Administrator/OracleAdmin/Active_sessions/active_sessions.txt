@@ -1,0 +1,13 @@
+--check the currently active sessions
+
+select
+		username,
+		machine,
+		count(*)
+from
+		gv$session
+where
+		type='USER'	
+group by
+		username,machine;
+		
