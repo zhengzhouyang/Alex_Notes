@@ -1,0 +1,164 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : Standby_database.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 02/28/2017
+
+-- Description   : Add it at the beginning of each sql script
+
+-------------------------------------------------------------------------------
+
+Link:https://docs.oracle.com/cd/E11882_01/server.112/e41134/create_ps.htm#SBYDB4725
+
+1. check the database log_mode 
+
+	select log_mode from v$database;
+	
+2. if primary database is not in archive log mode
+
+	shutdown immediate;
+	
+	startup mount;
+	
+	alter database archivelog;
+	
+	alter database open;
+	
+	-- this means every activities in database will generate the archive log
+	alter database force logging; 
+		
+3. check the primary database parameter and standby database parameter
+	
+	show parameter db_name;
+	
+	show parameter db_unique_name;
+
+	Running the above two commands in both servers, db_name should be the same and the db_unique_name should be different
+	
+4. Configure the tnsname.ora (Net service name) on both servers 
+
+	Make sure they can tnsping to each other, tnsname entries should be the same
+
+5. configure the LOG_ARCHIVE_CONFIG
+	
+	--using db_unique_name as the parameter
+	ALTER SYSTEM SET LOG_ARCHIVE_CONFIG='DG_CONFIG=(DB11G,DB11G_STBY)';
+	
+6. configure the environment on primary database
+
+	ALTER SYSTEM SET LOG_ARCHIVE_DEST_2='SERVICE=db11g_stby NOAFFIRM ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=DB11G_STBY';
+
+	--using the below sql instead if it's a RAC env.
+	ALTER SYSTEM SET LOG_ARCHIVE_DEST_STATE_2=ENABLE;'
+	
+	ALTER SYSTEM SET LOG_ARCHIVE_DEST_STATE_2='ENABLE' SCOPE = BOTH SID = '*';
+	
+	ALTER SYSTEM SET LOG_ARCHIVE_FORMAT='%t_%s_%r.arc' SCOPE=SPFILE;
+
+	ALTER SYSTEM SET LOG_ARCHIVE_MAX_PROCESSES=30;
+
+	ALTER SYSTEM SET REMOTE_LOGIN_PASSWORDFILE=EXCLUSIVE SCOPE=SPFILE;
+  
+	ALTER SYSTEM SET FAL_SERVER=DB11G_STBY;
+
+	--optional
+	--ALTER SYSTEM SET DB_FILE_NAME_CONVERT='DB11G_STBY','DB11G' SCOPE=SPFILE;
+
+	--ALTER SYSTEM SET LOG_FILE_NAME_CONVERT='DB11G_STBY','DB11G'  SCOPE=SPFILE;
+
+	ALTER SYSTEM SET STANDBY_FILE_MANAGEMENT=AUTO;
+  
+7. Backup Primary DATABASE
+
+	BACKUP DATABASE PLUS ARCHIVELOG;
+	
+8. Create Standby Controlfile and PFILE
+
+	ALTER DATABASE CREATE STANDBY CONTROLFILE AS '/tmp/db11g_stby.ctl';
+	
+	CREATE PFILE='/tmp/initDB11G_stby.ora' FROM SPFILE;
+	
+9. SCP control file, parameter file, password file to standby servers
+
+	modify the parameter file by change the following
+	
+	*.db_unique_name='DB11G_STBY'
+	*.fal_server='DB11G'--the destination asking for missing redo logs
+	*.log_archive_dest_2='SERVICE=db11g ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=DB11G'
+	
+10. Create the same path for datafile and fast recovery area
+
+	$ mkdir -p /u01/app/oracle/oradata/DB11G
+	
+	$ mkdir -p /u01/app/oracle/fast_recovery_area/DB11G
+	
+	$ mkdir -p /u01/app/oracle/admin/DB11G/adump
+	
+11. Create redo log file on standby database
+
+12. Create standby redo log file on both databases
+	  
+	ALTER DATABASE ADD STANDBY LOGFILE ('/u01/app/oracle/oradata/DG11G/standby_redo01.log') SIZE 52429312;
+	ALTER DATABASE ADD STANDBY LOGFILE ('/u01/app/oracle/oradata/DG11G/standby_redo02.log') SIZE 52429312;
+	ALTER DATABASE ADD STANDBY LOGFILE ('/u01/app/oracle/oradata/DG11G/standby_redo03.log') SIZE 52429312;
+	ALTER DATABASE ADD STANDBY LOGFILE ('/u01/app/oracle/oradata/DG11G/standby_redo04.log') SIZE 52429312;
+
+13. Run duplicate command to create the standby database
+
+	rman TARGET sys/ccreek1@DG11G AUXILIARY sys/ccreek1@DG11G_STBY
+	
+	--using backupsets and archivelogs
+	DUPLICATE TARGET DATABASE
+	  FOR STANDBY
+	  DORECOVER
+	  SPFILE
+		SET "db_unique_name"="DEVDBWL_STANDBY" COMMENT ''Is a duplicate''
+		SET LOG_ARCHIVE_DEST_2="SERVICE=DEVDBWL_STANDBY NOAFFIRM ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=DEVDBWL_STANDBY"
+		SET FAL_SERVER="DEVDBWL" COMMENT "Is primary"
+	  NOFILENAMECHECK;
+
+	--using active database
+	DUPLICATE TARGET DATABASE
+	  FOR STANDBY
+	  FROM ACTIVE DATABASE
+	  DORECOVER
+	  SPFILE
+		SET db_unique_name='DG11G_STBY' COMMENT 'Is standby'
+		SET LOG_ARCHIVE_DEST_2='SERVICE=DG11G ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=DG11G'
+		SET FAL_SERVER='DG11G' COMMENT 'Is primary'
+	  NOFILENAMECHECK;
+
+14. Start apply process
+
+	CREATE SPFILE FROM PFILE='/tmp/initDB11G_stby.ora';
+	
+	startup nomount;
+	
+	alter database mount standby database;
+
+	--start apply process
+	alter database recover managed standby database disconnect from session;
+	
+	--cancel apply process
+	ALTER DATABASE RECOVER MANAGED STANDBY DATABASE CANCEL;
+	
+15. Check standby database status
+ 
+	--checking this on primary database
+	select DATABASE_MODE,RECOVERY_MODE,STATUS,GAP_STATUS from  v$archive_dest_status;
+ 
+	--checking on both databases
+	select OPEN_MODE,PROTECTION_MODE,DATAGUARD_BROKER,GUARD_STATUS,DB_UNIQUE_NAME,CURRENT_SCN from v$database;
+
+	
+	
+	
+ 

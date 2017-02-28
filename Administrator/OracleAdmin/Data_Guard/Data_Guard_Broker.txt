@@ -1,0 +1,37 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : 	Data Guard Broker.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : Notes
+
+-- Requirements  : DBA Privileges
+
+-- Last Modified : 02/28/2017
+
+-- Description   : Set up data broker after DG was set up
+
+-------------------------------------------------------------------------------
+
+1. Enable the dg_broker_start parameter on both primary and standby servers
+
+	ALTER SYSTEM SET dg_broker_start=true;
+	
+2. On Primary Database
+
+	$ dgmgrl sys/Password1@cdb1
+	
+	DGMGRL> CREATE CONFIGURATION my_dg_config AS PRIMARY DATABASE IS cdb1 CONNECT IDENTIFIER IS cdb1;
+	
+	DGMGRL> ADD DATABASE cdb1_stby AS CONNECT IDENTIFIER IS cdb1_stby MAINTAINED AS PHYSICAL;
+	
+	DGMGRL> ENABLE CONFIGURATION;
+	
+	DGMGRL> SHOW CONFIGURATION;
+	
+	DGMGRL> SHOW DATABASE cdb1;
+	
+	DGMGRL> SHOW DATABASE cdb1_stby;
