@@ -8,7 +8,7 @@
 
 -- Call Syntax   : Notes
 
--- Requirements  : SYS privileges
+-- Requirements  : SYS privileges or administer_resource_manager
 
 -- Last Modified : 11/07/2016
 
@@ -36,7 +36,13 @@
 	BEGIN
 	  DBMS_RESOURCE_MANAGER.clear_pending_area();
 	  DBMS_RESOURCE_MANAGER.create_pending_area();
-
+	
+	  -- If user doesn't have administer_resource_manager privileges
+	  exec DBMS_RESOURCE_MANAGER_PRIVS.GRANT_SYSTEM_PRIVILEGE
+		(grantee_name	=>	'MarthaG'
+		privilege_name	=>	'ADMINISTER_RESOURCE_MANAGER',
+		admin_option	=>	TRUE);
+	  
 	  -- Create plan
 	  DBMS_RESOURCE_MANAGER.create_plan(
 		plan    => 'hybrid_plan',

@@ -1,0 +1,41 @@
+###############################################################################
+
+## File Name     : LatestGit.txt
+
+## Author        : Alex(Zhouyang Zheng)
+
+## Call Syntax   : . script.sh OR ./script.sh OR sh script.sh(if executable)
+
+## Requirements  : Execution Privileges(chmod +x /path/script.sh)
+
+## Last Modified : 03/23/2017
+
+## Description   : Yum repo has very old git. So we need to deploy it mannually
+
+###############################################################################
+
+Src: https://oracle-base.com/articles/linux/git-2-installation-on-linux
+
+1. resolved the dependency firstly, rmove the git if installed from yum
+
+	yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel -y
+	yum install gcc perl-ExtUtils-MakeMaker -y
+	yum remove git -y
+	
+2.  Download the latest version from git repo, uzip it
+
+	cd /usr/src
+	wget https://www.kernel.org/pub/software/scm/git/git-2.2.2.tar.gz
+	tar xzf git-2.2.2.tar.gz
+	
+3. Install it. Be careful about 4th command. Don't mess about it.
+
+	cd git-2.2.2
+	make prefix=/usr/local/git all
+	make prefix=/usr/local/git install
+	echo "export PATH=$PATH:/usr/local/git/bin" >> /etc/bashrc
+	source /etc/bashrc
+	
+4. Check your git version
+	
+	git --version

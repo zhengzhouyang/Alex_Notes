@@ -1,0 +1,39 @@
+Virtual-RAC-Guid
+
+export ORACLE_UNQNAME=virrac
+
+emctl start dbconsole
+
+enterprise-manager = https://rac1.localdomain:1158/em
+
+Global_name=virrac.localdomain
+
+SID=virrac
+
+All the password is ccreek1 for ASM/virrac SYS(other users)
+
+Check ASM Status
+
+. oraenv
+ORACLE_SID=+ASM1 based on which node
+
+crsctl status resource -t
+
+Check status of RAC
+
+. oraenv
+virrac
+
+srvctl config database -d virrac
+
+srvctl status database -d virrac
+
+export ORACLE_SID=virrac1
+
+sqlplus / as sysdba;
+
+select parallel from v$instance;
+
+select inst_name from v$active_instances;
+
+

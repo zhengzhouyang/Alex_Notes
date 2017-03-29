@@ -1,0 +1,68 @@
+--tablespace details info
+	select 
+			tablespace_name,
+			block_size,
+			contents,
+			extent_management
+	from
+			dba_tablespaces;
+
+--segment information
+	select 
+			tablespace_name,
+			count(*) NUM_OBJECTS,
+			sum(bytes),
+			sum(blocks),
+			sum(extents)
+	from
+			dbs_segments
+group by rollup(tablespace_name);
+
+--check object status
+	select 
+			owner,
+			OBJECT_NAME,
+			OBJECT_TYPE,
+			STATUS
+	from
+			dba_objects
+	where 
+			OWNER='RISK_DEPT'
+	and
+			OBJECT_NAME='DC_RUN_LIST_MV';
+		
+--MView refresh mode info		
+	select 
+			NAME,
+			TABLE_NAME,
+			MASTER_VIEW,
+			MASTER,
+			REFRESH_METHOD,
+			LAST_REFRESH,
+			ERROR 
+	from 
+			all_snapshots
+	where 
+			NAME='DC_RUN_LIST_MV';
+
+--Query for the MView
+set long 10000000;
+
+select OWNER,MVIEW_NAME,QUERY,REFRESH_MODE from all_mviews where MVIEW_NAME='DC_RUN_LIST_MV';
+
+select QUERY from all_mviews where MVIEW_NAME='DC_RUN_LIST_MV';
+			
+--Privileges checking			
+select grantee,owner,table_name,privilege from dba_tab_privs where grantee='RISK_DEPT'
+and owner in('REMARKETING','FLOORING_DWH');
+
+--Synonym info checking
+select * from DBA_SYNONYMS where SYNONYM_NAME ='MV_ACCOUNTS';
+
+--scheduler job running
+select JOB,LOG_USER,PRIV_USER,SCHEMA_USER,LAST_DATE,NEXT_DATE,FAILURES from dba_jobs where job=62;
+		
+		
+		
+		
+		

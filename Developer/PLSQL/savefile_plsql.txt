@@ -1,0 +1,39 @@
+set serveroutput on;
+DECLARE
+	l_file       	UTL_FILE.FILE_TYPE;
+	l_buffer     	RAW (32767);
+	l_amount     	BINARY_INTEGER     := 32767;
+	l_pos        	INTEGER            := 1;
+	l_blob       	BLOB;
+	l_blob_len   	INTEGER;
+	v_file_name		VARCHAR2(500);
+BEGIN
+
+	l_pos := 1;
+
+	l_file := UTL_FILE.FOPEN ('/prm_images/projects/', 'alex_test.png', 'wb');
+
+	LOOP
+		l_blob_len := DBMS_LOB.getlength (l_blob);
+ 
+		   	WHILE l_pos < l_blob_len
+		   	LOOP
+			  	DBMS_LOB.READ (l_blob, l_amount, l_pos, l_buffer);
+			  	UTL_FILE.put_raw (l_file, l_buffer, FALSE);
+			  	l_pos := l_pos + l_amount;
+		   	END LOOP;
+		  	commit;
+	END LOOP;
+
+		UTL_FILE.FCLOSE (l_file);
+		
+EXCEPTION
+   WHEN OTHERS
+   THEN
+	  IF UTL_FILE.IS_OPEN (l_file)
+	  THEN
+		 UTL_FILE.FCLOSE (l_file);
+	  END IF;
+	  RAISE;	
+END;
+/

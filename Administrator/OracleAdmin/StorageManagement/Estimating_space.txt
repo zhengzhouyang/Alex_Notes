@@ -1,0 +1,64 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : Estimating_space.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Call Syntax   : Notes
+
+-- Requirements  : DBA roles
+
+-- Last Modified : 02/15/2017
+
+-- Description   : Estimating space requirements
+
+-------------------------------------------------------------------------------
+
+-------**************  Estimating space requirements **************-------
+
+-- Estimating space requirements for a table
+
+	set serveroutput on;
+
+	declare
+		calc_used_bytes NUMBER;
+		calc_alloc_bytes NUMBER;
+	begin
+		DBMS_SPACE.CREATE_TABLE_COST(
+			tablespace_name	=>	'USERS',
+			avg_row_size	=>	&avg_len,
+			row_count		=>	&row_num,
+			pct_free		=>	&pct_free,
+			used_bytes		=>	calc_used_bytes,
+			alloc_bytes		=>	calc_alloc_bytes
+		);
+		
+		DBMS_OUTPUT.PUT_LINE('Used bytes: ' || round(calc_used_bytes/1024/1024) || ' MB' );
+		DBMS_OUTPUT.PUT_LINE('Allocated bytes: ' || round(calc_alloc_bytes/1024/1024) || ' MB');
+	end;
+	/
+
+-- Estimating space requirements for a index
+
+	set serveroutput on;
+
+	declare
+		calc_used_bytes NUMBER;
+		calc_alloc_bytes NUMBER;
+	begin
+		DBMS_SPACE.CREATE_INDEX_COST(
+			ddl				=> 	'&ddlCmd', --don't add simicolon at the end the command
+			used_bytes		=>	calc_used_bytes,
+			alloc_bytes		=>	calc_alloc_bytes
+		);
+		DBMS_OUTPUT.PUT_LINE('Used bytes: ' || round(calc_used_bytes/1024/1024) || ' MB' );
+		DBMS_OUTPUT.PUT_LINE('Allocated bytes: ' || round(calc_alloc_bytes/1024/1024) || ' MB');
+	end;
+	/
+	
+-------***************************************************-------	
+
+
+
+
+

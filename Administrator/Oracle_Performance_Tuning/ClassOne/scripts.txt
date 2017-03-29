@@ -1,0 +1,24 @@
+create table t1 as 
+select 
+		trunc((rownum-1)/100)	n1,
+		rpad('x',100)			padding
+from
+		all_objects
+where 
+		rownum <= 1000;
+		
+--Collect statistics using dbms_stats here
+exec  dbms_stats.gather_table_stats('SYSTEM','T1');
+
+set autotrace traceonly explain;
+select *
+from 
+		t1
+where
+		n1 in (1,2);
+		
+select *
+from 
+		t1
+where
+		n1 in (11,12);

@@ -1,0 +1,18 @@
+# RAC IP Allocation
+
+# Private
+192.168.10.1    rac1-priv.localdomain   rac1-priv
+192.168.10.2    rac2-priv.localdomain   rac2-priv
+
+# Public
+192.168.56.71    rac1.localdomain        rac1
+192.168.56.72    rac2.localdomain        rac2
+
+# Virtual
+192.168.56.81    rac1-vip.localdomain    rac1-vip
+192.168.56.82    rac2-vip.localdomain    rac2-vip
+
+# SCAN
+192.168.56.91    rac-scan.localdomain    rac-scan
+192.168.56.92    rac-scan.localdomain    rac-scan
+192.168.56.93    rac-scan.localdomain    rac-scan
