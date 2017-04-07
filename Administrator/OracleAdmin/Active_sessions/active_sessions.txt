@@ -53,6 +53,15 @@ from
 where		
 	SQL_ID='1xfh5rprnucf8';
 	
+	
+set long 1000000;	
+select
+   sql_fulltext
+from
+   v$sql
+where		
+	SQL_ID='&ssid';
+	
 
 		
 	
