@@ -1,0 +1,89 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : undo_advisor.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 04/11/2017
+
+-- Description   : Need License!!!!!!
+
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+
+-- firstly, undo space management is based on AWR snapshot statistics
+
+-------------------------------------------------------------------------------
+
+set pages 5000;
+
+select
+		snap_id,
+		begin_interval_time,
+		end_interval_time
+from
+		dba_hist_snapshot
+where
+		begin_interval_time > '21-Jul-07 08.00.00 PM' 
+and
+		end_interval_time < '21-Jul-07 09.31.00 PM'
+order by 3 desc;
+
+-- Date need to be changed
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+-- Anonymous PL/SQL block for creating undo tablespace usage report
+-- The result will go into dba_advisor finding
+
+-------------------------------------------------------------------------------
+
+variable task_id number;
+
+declare
+		task_id		number;
+		name		varchar2(100);
+		descr		varchar2(500);
+		obj_id		number;
+begin
+		name :=	'';--unique name generated from create_task
+		descr := 'Check Undo Tablesoace';
+		dbms_advisor.create_task('Undo Advisor', :task_id , name , descr);
+		dbms_advisor.create_object(name,'UNDO_TBS',null,null,null,'null',obj_id);
+		dbms_advisor.set_task_parameter(name, 'TARGET_OBJECTS' , obj_id);
+		dbms_advisor.set_task_parameter(name,'START_SNAPSHOT',3788);
+		dbms_advisor.set_task_parameter(name,'END_SNAPSHOT',3801);
+		dbms_advisor.set_task_parameter(name,'INSTANCE',1);
+		dbms_advisor.execute_task(name);
+end;
+/
+
+print task_id;
+
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+
+-- query check for the result
+
+-------------------------------------------------------------------------------
+
+select
+		owner,
+		task_id,
+		task_name,
+		type,
+		message,
+		more_info
+from
+		dba_advisor_findings
+where
+		task_id = 4450;

@@ -1,0 +1,48 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : resumable_space_allocation.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 04/11/2017
+
+-- Description   : suspend the statement when running out of space
+
+-------------------------------------------------------------------------------
+
+alter session enable resumable timeout 3600;
+
+when error happens, it gives you enough time to response
+
+select 
+		user_Id,
+		instance_id,
+		status,
+		name,
+		error_msg
+from
+		dba_resumable;
+		
+alter tablespace users9
+		add datafile '+DATA'
+		size 100m autoextend on;
+		
+--create trigger to notify the DBA when space is running out
+
+create or replace trigger resumable_notify
+	after suspend on database
+declare
+	-- if variables
+begin
+	--Give DBA 2 hours to resolve
+	dbms_resumable.set_timeout(7200);
+	--check DBA_RESUMABLE for user_Id, then send e-mail
+	utl_mail.sebd('azheng@cloudcreek.com');
+end;
+/

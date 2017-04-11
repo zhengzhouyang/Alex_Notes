@@ -1,0 +1,36 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : index_usage.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : SYSDBA Privileges
+
+-- Last Modified : 04/11/2017
+
+-- Description   : When index is not in use, it wastes the space
+
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+
+-- Monitoring the usage and query the results
+
+-------------------------------------------------------------------------------
+
+
+	alter index hr.index_name monitoring usage;	--start monitoring
+	
+	select * from v$object_usage;			 	--check usage
+	
+	analyze index hr.index_name validate structure;	--analyze gather statistics not used by dbms_stats
+	
+	select pct_used from index_stats where name = 'INDEX_NAME';
+	
+-- if space is not used efficiently
+
+	alter index hr.index_name rebuild online;

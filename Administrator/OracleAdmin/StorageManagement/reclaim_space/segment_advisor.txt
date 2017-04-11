@@ -1,0 +1,99 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : segment_advisor.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 04/10/2017
+
+-- Description   : describe space usage inside DB
+
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+
+-- use segment advsior to check fragmented space inside segment and reclaim
+
+-------------------------------------------------------------------------------
+variable task_id number;
+
+declare
+        name    varchar2(100);
+        descr   varchar2(500);
+        obj_id  number;
+begin
+        name    :=      '';--unique name generated from create task
+
+        descr   :=      'Check HR.EMPLOYEE table';
+
+        dbms_advisor.create_task('Segment Advisor', :task_id,name,descr,null);
+
+        dbms_advisor.create_object(name,'TABLE','HR','EMPLOYEES',null,null,obj_id);
+
+        dbms_advisor.set_task_parameter(name,'RECOMMEND_ALL','TRUE');
+
+        dbms_advisor.execute_task(name);
+
+end;
+/
+
+print task_id;
+
+-------------------------------------------------------------------------------
+
+-- The result will go into DBA_ADVISOR_FINDINGS
+
+-- DBA_ADVSIOR_RECOMMENDATIONS provides the solution
+
+-------------------------------------------------------------------------------
+
+select 
+		owner,
+		task_id,
+		task_name,
+		type,
+		message,
+		more_info
+from
+		dba_advisor_findings
+where
+		task_id = 333;-- the task id you get from previous sql
+		
+
+-- recommendation and benefits
+select
+		owner,
+		task_id,
+		task_name,
+		benefit_type
+from
+		dba_advisor_recommendations
+where
+		task_id = 333;
+		
+
+-- Action provided, don't run it directly. Some commands will lock the table
+-- and has a production impact. In addition, enable row movement before the
+-- The Command
+
+select
+		owner,
+		task_id,
+		task_name,
+		command,
+		attr1
+from
+		dba_advisor_actions
+where
+		task_0d = 333;
+		
+-- Solution example
+
+alter table HR.EMPLOYEES shrink space;
+		

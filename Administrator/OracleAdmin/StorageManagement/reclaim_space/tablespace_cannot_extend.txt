@@ -1,0 +1,32 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : tablespace_cannot_extend.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 01/04/2017
+
+-- Description   : Add it at the beginning of each sql script
+
+-------------------------------------------------------------------------------
+
+select
+		s.tablespace_name,
+		s.segment_name,
+		s.segment_type,
+		s.owner
+from 
+		dba_segments s
+where
+		s.next_extent >=
+		(select max(f.bytes) 
+		 from dba_free_space f
+		 where f.tablespace_name = s.tablespace_name)
+or s.extents = s.max_extents
+order by tablespace_name ,segment_name;

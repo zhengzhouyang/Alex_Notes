@@ -1,0 +1,48 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : SYSAUX.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 01/04/2017
+
+-- Description   : Add it at the beginning of each sql script
+
+-------------------------------------------------------------------------------
+
+-- SYSAUX usage
+
+select 
+		occupant_name, 
+		occupant_desc,
+		space_usage_kbytes
+from
+		v$sysaux_occupants
+order by 3;
+
+-- Check how to move components to other tablespace
+
+select
+		occupant_name,
+		move_procedure 
+from
+		v$sysaux_occupants
+where
+		occupant_name = 'EM';
+		
+
+-- Move to other tablespace
+
+create tablespace EM_REP
+		datafile '+DATA' size 250m autoextend on next 100m;
+		
+execute sysman.emd_maintenance.move_em_tblspc('EM_REP'); This command is got from second query
+
+run 1st query again!
+

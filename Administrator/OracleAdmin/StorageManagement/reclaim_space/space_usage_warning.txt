@@ -1,0 +1,70 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : space_usage_warning.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 04/11/2017
+
+-- Description   : space usage warning
+
+-------------------------------------------------------------------------------
+
+-- query the dba_thresholds table
+
+select
+		metrics_name,
+		warning_operator 	warn,
+		warning_value		wval,
+		critical_operator	crit,
+		critical_value		cval,
+		consecutive_occurrences	consec
+from
+		dba_thresholds;
+		
+
+-- PLSQL anonymous procedure to update tablespace usage 
+
+declare
+		/*OUT*/
+		warning_operator	number;
+		warning_value		varchar2(100);
+		critical_operator	number;
+		critical_value		varchar2(100);
+		observation_period	number;
+		consecutive_occurrences	number;
+		/*IN*/
+		metrics_id			number;
+		instance_name		varchar2(50);
+		object_type			number;
+		object_name			varchar2(50);
+	
+		new_warning_value	varchar2(100)	:=	'60';
+begin
+		metrics_id	:=	DBMS_SERVER_ALERT.TABLESPACE_PCT_FULL;
+		object_type	:=	DBMS_SERVER_ALERT.OBJECT_TYPE_TABLESPACE;
+		instance_name	:=	'ALEXDB2';
+		object_name	:= NULL;
+
+-- retrieve the current values with get_threshold
+		dbms_server_alert.get_threshold(
+			metrics_id,warning_operator,warning_value,
+			critical_operator,critical_value,
+			observation_period,consecutive_occurrences,
+			instance_name,object_type,object_name
+		);
+
+		dbms_server_alert.set_threshold(
+			metrics_id,warning_operator,new_warning_value,
+			critical_operator,critical_value,
+			observation_period,consecutive_occurrences,
+			instance_name,object_type,object_name
+		);
+end;
+/
