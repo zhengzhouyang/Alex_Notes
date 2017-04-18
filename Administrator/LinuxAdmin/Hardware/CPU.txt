@@ -1,0 +1,40 @@
+###############################################################################
+
+## File Name     : CPU.txt
+
+## Author        : Alex(Zhouyang Zheng)
+
+## Call Syntax   : notes
+
+## Requirements  : /
+
+## Last Modified : 04/18/2017
+
+## Description   : CPU的知识
+
+###############################################################################
+
+首先，CPU的频率是怎么来的，CPU中有一个clock，每完成一圈被称为clock cycle,完成的时间被
+称为clock period,例如250 picoseconds（微微秒）
+
+CPU的频率则是1秒钟能完成多少个clock cycle?所以1/clock period=rate，此例子中，rate is
+4GHZ
+
+但是为什么AMD的cpu比Intel的频率高却干不过intel呢？从目前调查来看，是执行效率的差距。
+
+现代系统中，一个程序可以被看成一个混合指令集（instruction mix）,在CPU中，有不同的指令分类
+（instruction type）,CPI(clock cycle per instruction)，完成每个指令需要的clock cycles
+是衡量CPU性能的一个重要指标。 
+
+	Instruction type:           instruction count 		clock cycle count
+		Integer arithmetic		45000					1
+		Data transfer     		32000					2
+		Floating point			15000					2
+		Control transfer		8000					2
+
+
+所以最后衡量一个CPU的效率的参数是 MIPS
+
+MIPS = clock frequency / CPI / 1 million
+
+所以architecture对于一个CPU来说至关重要。
