@@ -1,0 +1,36 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : explain_plan.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 04/13/2017
+
+-- Description   : Add it at the beginning of each sql script
+
+-------------------------------------------------------------------------------
+
+explain plan for select * from hr.employess;
+
+select * from table(DBMS_XPLAN.DISPLAY);
+
+@?/rdbms/admin/utlxplan.sql -- create plan table for this schema
+
+@?/rdbms/admin/utlxpls.sql  -- query the plan table serial execution (latest plan)
+
+@?/rdbms/admin/utlxplp.sql  -- query the plan table parallel execution (latest plan)
+
+首先执行计划是从里看到外的，每层都有一个cost指数，这个指数是累积的，cost是衡量一个步骤是否昂贵的原因，
+也对整个query的执行效率产生显著的影响
+
+
+
+	
+	
+

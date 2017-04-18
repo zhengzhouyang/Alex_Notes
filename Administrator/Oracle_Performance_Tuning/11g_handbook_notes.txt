@@ -1,0 +1,53 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : 11g_handbook_notes.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : NA
+
+-- Requirements  : DBA
+
+-- Last Modified : 04/13/2017
+
+-- Description   : Performance Tuning Notes
+
+-------------------------------------------------------------------------------
+
+1 performance tuning大多数情况下不能一次解决，有时是系统的某个部分达到了瓶颈，有时是
+poor designed sql or bad execution plan. 所以performance tuning需要遵循一个过程：
+	planning,implementing,monitoring,tuning. 循环往复
+	系统瓶颈可能是：memory / disk I/O
+
+2 poor table design可能会导致poor performance.过度的标准化表格非常适合OLTP环境，但是
+对于一些横跨多表以及需要访问大数据量的query来说，过度的标准化表格会使的performance变得
+很差。主要是这些数据需要在内存中被整合，还可能会被排序，尤其当表的数据量特别大的时候，这种
+负面效果过将会变得非常显著。
+
+3 有些query 会使用max,min等aggregate function,当数据量变的非常庞大时并且这个query经常
+被使用时，那么就会对数据库产生性能影响，提前对数据进行分区或者预先排序（partition or pre-sort）
+
+4 performance tuning的一些概念
+	
+	shared memory/shared parsed sql.共享意味着系统不需要承担这部分重新计算的成本，意味着更快捷
+	
+	schedule heavy task at off-peak time 一些DW的操作可以放在off-peak time从而不影响OLTP的性能
+	
+	two-tiers to three-tiers 将application server / database server分开从而降低系统资源被分享
+	
+	RAC 性能相对单实例要强大的多
+	
+	resource plan 通过设置priority group来确保某些group的用户在性能方面不受到影响
+	
+	run query parallel 通过并行计算，多线程执行让query更快的被完成
+		
+		关于并行计算的一些参数
+		PARALLEL_MAX_SERVERS -- oracle database有多少并行线程
+		PARALLEL_ADAPTIVE_MULTI_USER -- true/false 算法会根据系统负债自动减少用户请求的并行线程数来增加数据库性能
+		PARALLEL_MIN_SERVERS -- 小于5除非数据库一整天都繁忙，这个设置会使数据库新建query server process时增加系统负载，但是会降低平时的memory占用率
+		parallel也不是适用于所有情况，有时甚至会对系统性能产生负面影响，比如一个large query被分到了5个query processes， 这些processes同时访问同一块disk上的数据，
+				那么就会造成contention.最终这个query被加速了，却伤害了整个系统的性能
+				
+	

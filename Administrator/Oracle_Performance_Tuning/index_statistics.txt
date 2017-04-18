@@ -1,0 +1,53 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : index_statistics.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : Notes only
+
+-- Requirements  : DBA Privileges
+
+-- Last Modified : 04/13/2017
+
+-- Description   : index selectivity
+
+-------------------------------------------------------------------------------
+
+-- INDEX 的统计数据
+
+index selectivity
+	这个指数是衡量这个index是否能提升效率的重要参数
+	The most ideal selectivity = 1，这存在于 unique index on not null column中。
+	一般情况下，这个指数越接近 1 越好。
+	e.g. 一个bad selective index会对性能产生负面影响。比如一个column有100,000 records但是只有500个distinct values。
+	那么平均下来每个index将对应200行数据，所以每次会重复读取这个index/table的过程，这样query的执行效率还不如full table 
+	scan来的高。 
+	解决方案，可以把两个bad selective column组合成一个composite index，这样的selective可能会被提高
+	
+计算selectivity的方法：
+	
+	(1)
+			select count(distinct column)/count(count) selectivity from table;
+	
+	(2) 
+	
+			analyze table hr.employees compute statistics;
+	
+			select distinct_keys from user_indexes/dba_indexes where table_name = 'EMPLOYEES' and index_name = 'IDX_EMP_JOB';
+			
+			select num_rows from user_tables/dba_tables where table_name = 'EMPLOYEES';
+			
+			select column_name, num_distinct from user_tab_columns/dba_tab_columns where table_name = 'EMPLOYEES';
+			
+针对不同的环境，性能的衡量标准不一致。
+
+transcation-oriented  	考虑first row performance
+
+batch-oriented			考虑all row performance, 即完成整个query的总时间
+
+distributed accross 
+mulit DB 				考虑尽量少用db link，否则可能会造成network traffic  issue
+

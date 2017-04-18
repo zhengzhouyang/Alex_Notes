@@ -1,0 +1,120 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : memory_tuning.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : Notes only
+
+-- Requirements  : DBA Privileges
+
+-- Last Modified : 04/17/2017
+
+-- Description   : Memory tuning notes
+
+-------------------------------------------------------------------------------
+
+1 using memory_target parameter,so Oracle database will tune the memory automatically
+
+2 SQL has the most physical reads
+	
+-- physical read is disk read/ logical read is buffet gets
+	
+	select
+			s.buffer_gets,
+			s.disk_reads,
+			s.executions,
+			s.buffer_gets/s.executions B_E,
+			se.username
+			--s.SQL_TEXT
+	from
+			v$sql s
+	join
+			v$session se
+	on
+			se.sql_id = s.sql_id
+	where 
+			s.executions != 0
+	order by
+			disk_reads desc;
+
+-- 尽量避免physical read,disk IO是非常昂贵的
+
+-- hit ratio
+	select 
+			sess.username,
+			sess_io.block_gets,
+			sess_io.consistent_gets,
+			sess_io.physical_reads,
+			round(100*(sess_io.consistent_gets
+					+sess_io.block_gets
+					-sess_io.physical_reads)/
+					(decode(sess_io.consistent_gets,0,1,
+							sess_io.consistent_gets
+							+sess_io.block_gets)),2)
+			session_hit_ratio
+	from
+			v$sess_io sess_io,v$session sess
+	where 
+			sess.sid=sess_io.sid
+	and
+			sess.username is not null
+	order by
+			username;
+		
+--cached object		
+	select 
+			object_name,
+			object_type,
+			count(*) num_buff
+	from
+			x$bh a,
+			sys.dba_objects b
+	where
+			a.obj=b.object_id
+	and
+			owner not in ('SYS','SYSTEM')
+	group by
+			object_name, object_type;
+			
+			
+/*
+
+cache management: default, keep, recycle.
+因为cache的算法是LRU，keep , recycle的作用是防止default里的cache被一些特殊的情况踢出去。
+
+keep的作用是，有些非常hot的small table，需要always in memory,不用经常被aged out造成不必要的
+disk I/O,也不会打乱正常的default cache
+
+recycle的作用是，cache需要被快速的从memory中移除，有些query可能一天只run一次，但是却访问大量的
+数据块，踢出了default里原本正常的数据块，从而影响DB performance
+
+*/
+
+-- 使用 keep pool
+create table state_cd_lookup
+(
+	state_cd_lookup		char(2),
+	state_nm			varchar2(50)
+)
+storage (buffer_pool keep);
+把table换成其他cache pool,用alter table command
+
+MEMORY_TARGET一旦被设置，那么AMM就被启用了，
+SGA_TARGET/PGA_AGGREGATE_TARGET如果不为0的话就是最小值。
+
+如贵哦MEMORY_TARGET没有被设置，并且SGA_TARGET被设置的话，
+那么ASMM就被启用了。
+同理，
+db_cache_size,
+shared_pool_size,
+java_pool_size,
+large_pool_size
+不为0的就是最小值。
+否则query V$SGASTAT来决定大小
+
+有些package如果想被钉在shared pool里的话，
+execute DBMS_SHARED_POOL.KEEP('APPOWNER.ADD_CLIENT','P');
+
