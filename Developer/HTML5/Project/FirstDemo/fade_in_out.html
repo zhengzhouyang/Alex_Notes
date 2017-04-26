@@ -1,0 +1,118 @@
+<!--
+viewpoint make website work on all devices and screen resolution
+
+W3.CSS take care of styling needs  and all device and browser differences
+
+int this web page, I need the following elements:
+
+	A navigation bar
+	A slide show
+	A header
+	Some sections and articles
+	A footer
+	fade in & out animation
+
+-->
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<!--free Icon online-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<style>
+.mySlides {display: none;}​
+</style>
+
+<body>
+
+<!--nav-->
+<nav class="w3-bar w3-black">
+
+	<a href="#home" class="w3-button w3-bar-item">Home</a>
+	<a href="#band" class="w3-button w3-bar-item">Band</a>
+	<a href="#tour" class="w3-button w3-bar-item">Tour</a>
+	<a href="#contact" class="w3-button w3-bar-item">Contact</a>
+	
+</nav>
+
+<section>
+  <img class="mySlides" src="https://www.w3schools.com/w3css/img_la.jpg" style="width:100%">
+  <img class="mySlides" src="https://www.w3schools.com/w3css/img_ny.jpg" style="width:100%">
+  <img class="mySlides" src="https://www.w3schools.com/w3css/img_chicago.jpg" style="width:100%">
+</section>
+
+<!--Article head-->
+<section class="w3-container w3-center" style="max-with:600px">
+  <h2 class="w3-wide">THE BAND</h2>
+  <p class="w3-opacity"><i>We love music</i></p>
+</section>
+
+<!--Article body-->
+<section class="w3-container w3-content w3-center" style="max-with:600px">
+<p class="w3-justify">
+We have created a fictional band website. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!--introduce memeber-->
+<section class="w3-row-padding w3-center w3-light-grey">
+  <article class="w3-third">
+    <p>John</p>
+    <img src="https://www.w3schools.com/howto/img_bandmember.jpg" alt="Random Name" style="width:100%">
+  </article>
+  <article class="w3-third">
+    <p>Paul</p>
+    <img src="https://www.w3schools.com/howto/img_bandmember.jpg" alt="Random Name" style="width:100%">
+  </article>
+  <article class="w3-third">
+    <p>Ringo</p>
+    <img src="https://www.w3schools.com/howto/img_bandmember.jpg" alt="Random Name" style="width:100%">
+  </article>
+</section>
+
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-black w3-xlarge">
+  <a href="#"><i class="fa fa-facebook-official"></i></a>
+  <a href="#"><i class="fa fa-pinterest-p"></i></a>
+  <a href="#"><i class="fa fa-twitter"></i></a>
+  <a href="#"><i class="fa fa-flickr"></i></a>
+  <a href="#"><i class="fa fa-linkedin"></i></a>
+  <p class="w3-medium">
+    Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>
+  </p>
+</footer>
+
+
+
+
+</body>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+<script>
+
+(function() {
+
+    var quotes = $(".mySlides");
+    var quoteIndex = -1;
+
+    function showNextQuote() {
+        ++quoteIndex;
+        quotes.eq(quoteIndex % quotes.length%3)
+            .fadeIn(2000)
+            .delay(2000)
+            .fadeOut(2000, showNextQuote);
+			//callback works
+    }
+
+    showNextQuote();
+
+})();
+
+</script>
+
+</html>
