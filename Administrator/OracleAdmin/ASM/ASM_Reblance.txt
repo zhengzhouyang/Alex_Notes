@@ -60,7 +60,19 @@
 			create_date,
 			path
 	from
-			v$asm_disk;
+			v$asm_disk
+	where group_number=0;
+			
+	select
+			group_number,
+			disk_number,
+			name,
+			failgroup,
+			create_date,
+			path
+	from
+			v$asm_disk
+	where path like '%S02%';
 
 -------------------------------------------------------------------------------
 
