@@ -1,0 +1,124 @@
+###############################################################################
+
+## File Name     : lvm_notes.sh
+
+## Author        : Alex(Zhouyang Zheng)
+
+## Call Syntax   : notes
+
+## Requirements  : root
+
+## Last Modified : 04/27/2017
+
+## Description   : Notes for the LVM, to extend a existing vg,lv
+
+###############################################################################
+
+1. Matadata for physical volume, volume group, logical volume
+
+	# pvs
+	
+	# vgs
+
+	# lvs
+	
+2. Create a partitions with LVM type
+
+	# fdisk -cu /dev/sd[a-z]             <====== this operation will format the disk and everything is gone
+	
+		To Create new partition Press n.
+		
+		Choose primary partition use p.
+
+		Choose which number of partition to be selected to create the primary partition.
+
+		Press 1 if any other disk available.
+
+		Change the type using t.
+
+		Type 8e to change the partition type to Linux LVM.
+
+		Use p to print the create partition (can ignore,for checking purpose).
+
+		Press w to write the changes.
+		
+3. check partition information & create physcial volume
+
+	# fdisk -l /dev/vdz
+	
+	# pvcreate /dev/vdz1
+	
+	# pvs
+	
+4. extend volume group & extend logical volume
+
+	# vgextend vg_tecmint /dev/sda1
+	
+	# vgs
+	
+	# pvscan
+	
+	# vgdisplay
+	
+	# lvextend -l +4607 /dev/vg_tecmint/LogVol01 <============== This command based on PE/ you also can extend by GB
+	
+	# resize2fs /dev/vg_tecmint/LogVol01		 <============== update file system, but could crash something! 
+	
+	# lvdisplay
+	
+	# vgdisplay
+	
+	# pvs
+
+	# vgs
+
+	# lvs
+	
+5. Reduce the LVM -- more complicate and dangerous operation, highly not recommend to do this
+
+	Before starting, 
+			1 backup the data
+			2 unmount the file system for reducing
+			3 Check the file system after unmount
+			4 Reduce the file system
+			5 Reduce the Logical Volume size than Current size
+			6 Recheck the file system for error
+			7 Remount the file-system back to stage
+			
+			(In example, resize the size from 18GB to 10GB)
+			
+6 unmount the file system for reducing
+	
+	# lvs
+	
+	# df -h
+	
+	# umount -v /mnt/tecmint_reduce_test/  							<======== umount it from the mount point
+	
+	# e2fsck -ff /dev/vg_tecmint_extra/tecmint_reduce_test			<======== check for file system error
+
+7 Reduce the file system
+	
+	# resize2fs /dev/vg_tecmint_extra/tecmint_reduce_test 10GB		
+	
+	# lvreduce -L -8G /dev/vg_tecmint_extra/tecmint_reduce_test		<======== Reduce the Logical volume using GB size.
+	
+	# lvdisplay vg_tecmint_extra
+	
+	# lvreduce -l -2048 /dev/vg_tecmint_extra/tecmint_reduce_test	<======== Reduce the Logical volume using PE(physcial extent).
+	
+	# resize2fs /dev/vg_tecmint_extra/tecmint_reduce_test			<======== Re-size the file-system back, In this step if there is any error that means we have messed-up our file-system.
+	
+	# mount /dev/vg_tecmint_extra/tecmint_reduce_test /mnt/tecmint_reduce_test/	<=========== mount it back
+	
+	# lvdisplay vg_tecmint_extra
+	
+References:http://www.tecmint.com/extend-and-reduce-lvms-in-linux/
+
+
+	
+
+	
+	
+	
+	
