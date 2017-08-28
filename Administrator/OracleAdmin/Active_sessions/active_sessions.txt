@@ -20,7 +20,8 @@ select
 from
 		gv$session
 where
-		type='USER'	
+		type='USER'	and
+		status='ACTIVE'
 group by
 		inst_id,username,machine
 order by 4 desc;
@@ -28,6 +29,7 @@ order by 4 desc;
 		
 select
 		sid,
+		SERIAL#,
 		SQL_ID,
 		username,
 		machine,
@@ -35,7 +37,8 @@ select
 from
 		v$session
 where
-		type='USER'	;
+		type='USER'	and
+		status='ACTIVE';
 		
 		
 select 
@@ -61,6 +64,20 @@ from
    v$sql
 where		
 	SQL_ID='&ssid';
+	
+select
+		INST_ID,
+		sid,
+		SERIAL#,
+		SQL_ID,
+		username,
+		machine,
+		status
+from
+		gv$session
+where
+		status='ACTIVE' and 
+		SQL_ID IS NOT NULL;
 	
 
 		

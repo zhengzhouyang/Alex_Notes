@@ -1,0 +1,148 @@
+/*
+	trigger practice
+		
+	you can not create a trigger on truncate/select operation
+*/
+
+	set serveroutput on;
+
+	create table x 
+	(
+		num number,
+		sqr number,
+		cub number
+	);
+	
+	insert into x values (1,1,1);
+	insert into x values (2,4,8);
+	insert into x values (3,9,27);
+	
+	commit;
+	
+	create or replace trigger delwarning
+	before delete on x
+	for each row
+	begin
+	
+		dbms_output.put_line('Warning!info will be deleted');
+	
+	end;
+	/
+	
+	delete from x where num=3;
+	
+	drop trigger delwarning;
+  
+	drop table x;
+	
+/*
+
+	trigger practice
+		
+	stop delete
+
+*/
+
+
+	set serveroutput on;
+
+	create table x 
+	(
+		num number,
+		sqr number,
+		cub number
+	);
+	
+	insert into x values (1,1,1);
+	insert into x values (2,4,8);
+	insert into x values (3,9,27);
+	
+	commit;
+	
+	create or replace trigger delwarning
+	before delete on x
+	for each row
+	begin
+	
+		raise_application_error(-20001,'Delete operation not allowed!!'); -- interesting 
+	
+	end;
+	/
+	
+	delete from x where num=3;
+	
+	drop trigger delwarning;
+  
+	drop table x;
+	
+	
+/*
+
+	trigger practice
+		
+	recursive trigger error
+
+*/
+
+	creare or replace trigger rec_trigger
+	after insert on x
+	begin
+	
+		insert into x values (1,2,3);
+	
+	end;
+	/
+	
+	insert into x values (5,25,125);
+	
+	--This wil cause ora-00036 issue, like infinite recursive
+	
+/*
+
+	format your output
+
+*/
+
+	set serveroutput on;
+	
+	begin
+		
+		dbms_output.put_line('Hello'||chr(13)||chr(13)||chr(13)||'World!');-- new lines
+		
+		dbms_output.put_line('Hello'||chr(9)||chr(9)||chr(9)||'World!');-- tabs
+		
+	end;
+	/
+	
+	begin 
+	
+		dbms_output.put_line(rpad('Hello',20)||rpad('World!',20));
+	
+		dbms_output.put_line(rpad('Hello you',20)||rpad('beautiful world!!',20));
+	
+	end;
+	/
+	
+	
+/*
+
+	trigger on one column
+
+*/
+
+	create or replace trigger trident
+	before update of num on x
+	for each row 
+	begin 
+		....
+	end;
+	/
+
+	create or replace trigger trident
+	before update on x
+	for each row
+	when (old.num>3)
+	begin 
+		............. :OLD.num .......... :NEW.num;
+	end;
+	/

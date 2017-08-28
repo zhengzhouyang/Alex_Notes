@@ -1,0 +1,52 @@
+Patching ODA X6-2
+
+1 Check the vwesion of the dcs-agnet
+
+	rpm -qa |grep dcs-agent
+	
+2 Download the zip and unzip it in /u01
+
+	after unzip, I should see a file oda-sm-12.1.2.10.0-170213-server.zip
+	
+3 Update metadata repository
+
+	--the path can be changed
+	
+	/opt/oracle/dcs/bin/odacli update-repository -f /u01/oda-sm-12.1.2.10.0-170213-server.zip
+	
+	--check the status
+	/opt/oracle/dcs/bin/odacli describe-job -i "286ae8d6-4813-4c37-b591-af169c3f724a"
+	
+4 Update the dcs agent
+
+	/opt/oracle/dcs/bin/odacli update-dcsagent -v 12.1.2.10.0 ; sleep 120
+	
+	2 mins to reload the new stack
+	
+	/opt/oracle/dcs/bin/odacli describe-job -i "6730531d-d583-4147-80f2-b793bcc7d9fa"
+	
+5 Upgrade the Server
+
+	/opt/oracle/dcs/bin/odacli update-server -v 12.1.2.10.0
+	
+	/opt/oracle/dcs/bin/odacli describe-job -i "c5a69d08-cd45-4e29-9708-086a2d187b85"
+	
+6 Verify the patching process
+	
+	odacli dcscribe-job
+	
+	or
+	
+	/opt/oracle/dcs/log/dcs-agent.log.
+	
+7 Update Database Home (Optional)
+
+	/opt/oracle/dcs/bin/odacli list-dbhomes
+
+	odacli update-dbhome –v 12.1.2.10 –dh <database home id>(Patch the database home)
+	
+	odacli update-dbhome -dh 6b503012-4ef7-4a75-afcd-848ebb01eb5d- v 12.1.2.10
+	
+	odacli update-dbhome -dh cd3949a5-fa2a-41a6-a388-cec77593e607  -v 12.1.2.10
+	
+	

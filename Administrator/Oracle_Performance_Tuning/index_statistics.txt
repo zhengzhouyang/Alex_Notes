@@ -27,6 +27,8 @@ index selectivity
 	scan来的高。 
 	解决方案，可以把两个bad selective column组合成一个composite index，这样的selective可能会被提高
 	
+	当selectivity的值很小或者query的数据量大于整表1/3时，full table scan会比读取index来的快。
+	
 计算selectivity的方法：
 	
 	(1)

@@ -1,0 +1,10 @@
+
+For looking at archive logs that have been already backed up:
+For looking at archive logs that have been already backed up:
+RMAN> list ARCHIVELOG all backed up 1 times to disk;
+For looking at archive logs that have NOT been backed up yet (so it will be very dangerous to delete those before the backup):
+RMAN> list ARCHIVELOG all backed up 0 times to disk;
+
+
+$ rman target /
+RMAN> delete obsolete;

@@ -1,0 +1,1 @@
+create public database link tampdl connect to USERNAME identified by "PASSWORD" using 'DBLINK';

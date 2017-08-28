@@ -1,0 +1,124 @@
+/*************************************************************************
+
+	Practice 1
+
+*************************************************************************/
+
+	set serveroutput on;
+
+	declare
+		z integer;
+	begin
+	
+		z := 20;
+		if z = 20 then
+		
+			dbms_output.put_line('The num is equal');
+		else
+			dbms_output.put_line('$$$$####They are not equal');
+		end if;
+	
+	end;
+	/
+	
+	
+/*************************************************************************
+
+	Practice 2
+
+*************************************************************************/
+	create or replace procedure hello3 (num in number) as
+	begin
+	
+		dbms_output.put_line('hello3');
+		
+		dbms_output.put_line(num);
+	
+	end hello3;
+	/
+	
+	begin
+	
+		hello3(100);
+		
+	end;
+	/
+	
+	drop procedure hello3;
+	
+	
+	
+/*************************************************************************
+
+	Practice 3
+
+*************************************************************************/
+
+	create function mySquare(num in number) return number is
+	begin
+	
+		return num*num;
+	
+	end mySquare;
+	/
+	
+	begin
+	
+		dbms_output.put_line(mySquare(10));
+	
+	end;
+	/
+	
+	drop function mySquare;
+	
+-- Another way to call function
+
+	declare
+		z number;
+	begin
+	
+		z := mySquare(10);
+		
+		dbms_output.put_line('The square of number is : ' || z);
+	
+	end;
+	/
+
+/*************************************************************************
+
+	Practice 4
+
+*************************************************************************/
+	
+	create or replace procedure mytest(
+		num1 in number, num2 out number)
+	as
+	begin
+	
+		-- num1 := 20; This statement will cause errors
+		
+		dbms_output.put_line('The value of num2 is '||num2);
+	
+		num2 := 500;
+	
+	end mytest;
+	/
+	
+	declare
+	
+		y number;
+		z number;
+	
+	begin
+		
+		y := 100;
+		z := 200;
+	
+		-- mytest(10,20); can't direct pass num into procedure, have to use a variable as parameter
+	
+		mytest(y,z);
+	
+	end;
+	/
+	
+	drop procedure mytest;

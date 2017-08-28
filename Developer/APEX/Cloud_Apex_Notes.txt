@@ -1,0 +1,18 @@
+unzip filename.zip
+
+cd $ORACLE_HOME
+
+mv apex apex_old
+
+mv /tmp/apex $ORACLE_HOME
+
+cd $ORACLE_HOME/apex
+
+sqlplus / as sysdba
+
+@apexins.sql SYSAUX SYSAUX TEMP /i/
+	
+	grep ORA- *.log
+	grep PLS- *.log
+
+@apex_epg_config.sql APEX_HOME -- maybe apex parent directory.

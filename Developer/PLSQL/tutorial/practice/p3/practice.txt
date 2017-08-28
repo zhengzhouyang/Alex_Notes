@@ -1,0 +1,37 @@
+/*
+	cursor practice
+*/
+
+	create table x 
+	(
+		num number,
+		sqr number,
+		cub number
+	);
+	
+	insert into x values (1,1,1);
+	insert into x values (2,4,8);
+	insert into x values (3,9,27);
+	
+	commit;
+	
+	set serveroutput on;
+	
+	create or replace procedure curPar is
+	begin
+	
+		for counter in (select * from x)
+		loop
+		
+			dbms_output.put_line('The output is' || counter.num||' '|| counter.sqr||' '|| counter.cub );
+		
+		end loop;
+	
+	end;
+	/
+	
+	exec curPar;
+	
+	drop table x;
+	
+	drop procedure curPar;

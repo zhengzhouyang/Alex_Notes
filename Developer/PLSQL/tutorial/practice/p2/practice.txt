@@ -1,0 +1,27 @@
+/*
+
+	PLSQL recursive function
+
+*/
+
+	set serveroutput on
+	
+	create or replace function factorial
+		(num in number) return number is
+	begin
+	
+		if num = 1 then return 1;
+		else return num*factorial(num-1);
+		end if;
+	
+	end factorial;
+	/
+	
+	begin
+	
+		dbms_output.put_line('The result of num is : ' || factorial(3));
+	end;
+	/
+	
+	drop function factorial;
+	

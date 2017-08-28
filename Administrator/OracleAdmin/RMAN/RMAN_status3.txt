@@ -1,0 +1,6 @@
+set lines 220;
+set pages 5500;
+
+alter session set nls_date_format='dd-mon-yyyy hh24:mi:ss';
+
+select operation,status,start_time,end_time from v$rman_status order by 3;

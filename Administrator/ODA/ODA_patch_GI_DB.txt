@@ -1,0 +1,26 @@
+GI Clone
+
+1 Concatenate Files after unzipping
+
+	cat oda-sm-12.1.2.10.0-170205-GI-12.1.0.2_1of2.zippart oda-sm-12.1.2.10.0-170205-GI-12.1.0.2_2of2.zippart > oda-sm-12.1.2.10.0-170205-GI-12.1.0.2.zip
+
+	cat oda-sm-12.1.2.10.0-170205-GI-12.1.0.2_1of2.zippart oda-sm-12.1.2.10.0-170205-GI-12.1.0.2_2of2.zippart > oda-sm-12.1.2.10.0-170205-GI-12.1.0.2.zip
+	
+	cat oda-sm-12.1.2.10.0-170205-GI-12.1.0.2_1of2.zippart oda-sm-12.1.2.10.0-170205-GI-12.1.0.2_2of2.zippart > oda-sm-12.1.2.10.0-170205-GI-12.1.0.2.zip
+
+2. Update Repository
+
+	/opt/oracle/dcs/bin/odacli update-repository -f /u01/oda-sm-12.1.2.10.0-170205-GI-12.1.0.2.zip, /u01/oda-sm-12.1.2.10.0-170205-DB-12.1.0.2.zip,/u01/oda-sm-12.1.2.9.0-161007-DB-11.2.0.4.zip
+
+
+
+
+
+
+
+
+
+
+
+
+
