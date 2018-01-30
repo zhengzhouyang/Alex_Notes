@@ -1,0 +1,68 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : Datatype.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Call Syntax   : Notes
+
+-- Requirements  : DBA roles
+
+-- Last Modified : 02/15/2017
+
+-- Description   : Estimating space requirements
+
+-------------------------------------------------------------------------------
+
+
+------------------------ How to use object ------------------------------------
+
+--create a object type
+	create type ADDRESS_TY as object
+	(
+		Street	VARCHAR2(50),
+		City	VARCHAR2(25),
+		State	CHAR(2),
+		Zip	NUMBER
+	);
+
+
+	create table CUSTOMER
+	(
+		name	VARCHAR2(25),
+		Address ADDRESS_TY
+	);
+
+	insert into CUSTOMER values
+	('Joe', ADDRESS_TY('My Street', 'Some City','ST',10001));
+
+	select * from CUSTOMER;
+
+--This sql won't work
+	select Address.Street from CUSTOMER;
+
+--This sql will work
+	select c.Address.Street from CUSTOMER c;
+	
+-------------------------------------------------------------------------------
+
+
+
+----------------- Covert existing table OR RDBMS to ODBMS ---------------------
+	
+--if a table or RDBMS has already been created, use View to convert it to object
+	CREATE TABLE CUSTOMER
+	(Name	VARCHAR2(25)	primary key,
+	Street	VARCHAR2(50),
+	City	VARCHAR2(25),
+	State	CHAR(2),
+	Zip		NUMBER);
+	
+--create object view
+	create view CUSTOMER_OV(Name,Address) as
+	select Name,
+			ADDRESS_TY(Street,City,State,Zip)
+		from CUSTOMER;
+	
+	
+-------------------------------------------------------------------------------

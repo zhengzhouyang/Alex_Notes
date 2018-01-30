@@ -1,0 +1,50 @@
+Git Notes:
+
+1. server info
+
+	Git Server: janus.cloudcreek.com 
+	root:ccreek1
+	git:ccreek1
+	
+2. register an account
+	
+	browser open: janus.cloudcreek.com 
+	
+	register the account
+	
+3. create a new project
+
+	copy the SSH/HTTP link
+	
+	e.g.
+		SSH : 	git@janus.cloudcreek.com:ccdev-alex/alex-sql-scripts.git
+		HTTP : http://janus.cloudcreek.com/ccdev-alex/alex-sql-scripts.git
+		
+4. Download git for your local machine
+
+	MAC:https://git-scm.com/download/mac
+	
+	after installation: run "git --version" in terminals
+	
+5. clone remote repo to your local env
+
+	cd PATH
+	
+	git clone SSH/HTTP-link
+	
+	cp "your file" into the folder
+	
+	git status -- check any untracked or modified files
+	
+	git add filename or * -- add one file or all files into stage
+	
+	git commit -m 'Your comment' -- save it in your local git repos
+	
+	git push -u origin master -- upload your file into remote git repos
+	
+	if your remote git repos are more advanced than your local repos
+		then run "git pull" to update your local git repos
+		
+	git command quick ref: https://drive.google.com/file/d/0B5dkgUTYF6bcR0V0ZWJNOXQ0ZnM/view?usp=sharing
+
+

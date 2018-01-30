@@ -1,0 +1,32 @@
+set pages 5000;
+set lines 220;
+col segment_name for a45;
+col segment_type for a15;
+
+select
+		OWNER,
+		SEGMENT_NAME,
+		SEGMENT_TYPE,
+		BYTES/1024/1024 MB,
+		TABLESPACE_NAME
+from
+		dba_segments
+where
+		TABLESPACE_NAME='USERS'
+and
+		BYTES/1024/1024 > 500
+order by 4;
+
+
+select
+		OWNER,
+		TABLESPACE_NAME,
+		SUM(BYTES/1024/1024/1024) GB
+from
+		dba_segments
+where
+		TABLESPACE_NAME='USERS'
+and
+		OWNER='APPTEST'
+group by
+		OWNER,TABLESPACE_NAME;

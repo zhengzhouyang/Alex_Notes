@@ -1,0 +1,36 @@
+select
+		name,
+		completion_time,
+		deleted,
+		status
+from
+		v$archived_log
+where
+		completion_time between sysdate-5 and sysdate-4; 
+		
+		
+select
+		name,
+		first_time,
+		resetlogs_time,
+		deleted,
+		status
+from
+		v$archived_log
+where
+		deleted='NO';
+		
+select 
+		dest_id,
+		name,
+		completion_time
+from 
+		v$archived_log
+where
+		dest_id=1
+and
+		name is not null
+order by 3 desc;
+
+
+select count(*) from v$archived_log where dest_id=1;

@@ -86,6 +86,6 @@ FROM
   , v$session s
 WHERE
       a.address = s.sql_address
-  AND s.sid = &&ora_sid
+  AND s.sid =&orasid;
 /
 

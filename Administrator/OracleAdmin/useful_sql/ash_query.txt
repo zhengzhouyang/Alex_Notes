@@ -1,0 +1,15 @@
+select 
+		SAMPLE_TIME,
+		SESSION_ID,
+		SESSION_SERIAL#,
+		SQL_ID,
+		TIME_WAITED,
+		PROGRAM,
+		MODULE,
+		ACTION
+from
+		gv$active_session_history
+where
+		SESSION_ID=1112 and
+		SESSION_SERIAL#=49646
+order by SAMPLE_TIME asc;

@@ -1,0 +1,130 @@
+SYS @ rptdb > SELECT * FROM V$LOGFILE;
+
+    GROUP# STATUS  TYPE
+---------- ------- -------
+MEMBER
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+IS_
+---
+         1         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_1_bdhvxntn_.log
+NO
+
+         2         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_2_bg504m4n_.log
+NO
+
+         3         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_3_bdhvxo3f_.log
+NO
+
+         4         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_4_bdhvcphw_.log
+NO
+
+         5         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_5_bdhvcpqz_.log
+NO
+
+         6         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_6_bdhvcq6m_.log
+NO
+
+         7         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_7_bdhvcqnz_.log
+NO
+
+         8         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_8_bdhvcr4r_.log
+NO
+
+         9         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_9_bdhvcrn0_.log
+NO
+
+        10         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_10_bdhvcs3t_.log
+NO
+
+        11         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_11_bdhvcsm0_.log
+NO
+
+        12         ONLINE
+/oradata1/RPTDB/onlinelog/o1_mf_12_bdhvct33_.log
+NO
+
+        20         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_20_bdqryz89_.log
+NO
+
+        40         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_40_bg4zyl8b_.log
+NO
+
+        41         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_41_bg4zzmhm_.log
+NO
+
+        42         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_42_bg4zzqgz_.log
+NO
+
+        43         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_43_bg4zztk8_.log
+NO
+
+        44         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_44_bg4zzww0_.log
+NO
+
+        45         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_45_bg4zzzvg_.log
+NO
+
+        46         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_46_bg5002fz_.log
+NO
+
+        47         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_47_bg5004hq_.log
+NO
+
+        48         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_48_bg5006pj_.log
+NO
+
+        49         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_49_bg5008wp_.log
+NO
+
+        50         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_50_bg500d8q_.log
+NO
+
+        51         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_51_bg500nqp_.log
+NO
+
+        52         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_52_bg500pv6_.log
+NO
+
+        53         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_53_bg500s77_.log
+NO
+
+        54         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_54_bg500v9p_.log
+NO
+
+        55         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_55_bg500yk9_.log
+NO
+
+        56         STANDBY
+/oradata1/RPTDB/onlinelog/o1_mf_56_bg5013j6_.log
+NO
+
+
+30 rows selected.

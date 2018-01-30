@@ -1,0 +1,8 @@
+Select POOL, bytes/1024/1024/1024 Free_Memory_In_GB
+From V$sgastat
+Where Name Like '%free memory%';
+
+Select POOL, name, bytes
+From V$sgastat
+where POOL='shared pool'
+order by 3;

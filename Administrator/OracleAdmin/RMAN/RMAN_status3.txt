@@ -4,3 +4,14 @@ set pages 5500;
 alter session set nls_date_format='dd-mon-yyyy hh24:mi:ss';
 
 select operation,status,start_time,end_time from v$rman_status order by 3;
+
+
+SELECT SID, SERIAL#, CONTEXT, SOFAR, TOTALWORK,
+       ROUND(SOFAR/TOTALWORK*100,2) "%_COMPLETE"
+FROM   V$SESSION_LONGOPS
+WHERE  OPNAME LIKE 'RMAN%'
+AND    OPNAME NOT LIKE '%aggregate%'
+AND    TOTALWORK != 0
+AND    SOFAR <> TOTALWORK;
+
+select * from v$resource_limit;

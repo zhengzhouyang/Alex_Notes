@@ -1,0 +1,12 @@
+alter system set processes=750 scope=spfile sid='*';
+
+alter system set sessions = 1200 scope=spfile sid='*';
+
+srvctl stop instance -d FGOWNER -i FGOWNER1
+
+srvctl start instance -d FGOWNER -i FGOWNER1
+
+srvctl stop instance -d FGOWNER -i FGOWNER2
+
+srvctl start instance -d FGOWNER -i FGOWNER2
+

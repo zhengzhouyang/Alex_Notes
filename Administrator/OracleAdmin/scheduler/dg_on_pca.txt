@@ -1,0 +1,12 @@
+dgprimary.cloudcreek.priv/192.168.209.199
+username: root 
+password: ccreek1
+instance name = DG11G
+
+dgstandby.cloudcreek.priv/192.168.209.188
+username:root
+password:ccreek1
+instance name = DG11G
+
+--checking the status, running it on the primary database;
+select DATABASE_MODE,RECOVERY_MODE,STATUS,GAP_STATUS from  v$archive_dest_status;

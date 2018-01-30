@@ -1,0 +1,18 @@
+#!/bin/sh
+
+. /home/oracle/.bashrc
+
+Today="`date +%d%m%Y`" # month number, day of month, year
+
+rman target=/ log=/home/oracle/scripts/QA_backups_$Today.log << EOF
+RUN {
+  ALLOCATE CHANNEL ch1 TYPE
+    DISK FORMAT '/u03/app/oracle/fast_recovery_area/%d_DB_%u_%s_%p';
+  BACKUP AS COMPRESSED BACKUPSET DATABASE PLUS ARCHIVELOG;
+  delete noprompt obsolete;
+  RELEASE CHANNEL ch1;
+}
+EXIT;
+EOF
+
+find /home/oracle/scripts -maxdepth 1 -name "QA_backups_*" -mtime +1 -exec rm {} \;

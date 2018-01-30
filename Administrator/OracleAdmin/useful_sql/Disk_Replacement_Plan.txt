@@ -1,0 +1,59 @@
+Replace one disk at a time!!!!!!!!!
+
+Disk Details:
+
+	/dev/sdx --> pd_15 --> /dev/mapper/HDD_E1_S15_716598244
+	
+	/dev/sdp --> pd_06 --> /dev/mapper/HDD_E1_S06_711988568
+
+Step 1: Preparation on both nodes
+
+		tail -f /var/log/messages
+		
+		tail -f asm log
+		
+		tail -f database log
+		
+		A shell window for OAKCLI, oakcli show disk pd_xx
+		
+		turn on the LED indicator, oakcli locate disk pd_xx on
+		
+Step 2: Disk Replacement
+
+		Call Alchemy,ask guy to get the disk ready then confrim the disk need to be replaced
+
+		oakcli locate disk pd_xx off
+		
+		*pull the disk out then wait 5 minutes, this gives the software enough time to remove old entries and prepare for a new disk
+		
+		insert the new disk then using oakcli show disk pd_xx, check the status of new disk
+		
+Step 3: ASM rebalancing 
+
+		log in as root then su - grid
+		
+		. oraenv +ASM#
+		
+		sqlplus / as sysasm
+		
+			alter diskgroup DATA/RECO rebalance power 11
+			
+			*select * from gv$asm_operation
+			*only no row return means the ASM rebalancing is done.
+		
+			(change it back)
+			alter diskgroup DATA/RECO rebalance power 1;
+		
+		change the ownership of file under /dev/mapper/ on BOTH NODES
+		
+		first disk replacement: 
+		
+			cd /dev/mapper
+			
+			ls -ltr HDD_E1_S15_716598244*
+			
+			chown root:disk HDD_E1_S15_716598244p1
+			
+			chown root:disk HDD_E1_S15_716598244p2
+
+Once everything is done, start over another disk replacement.
