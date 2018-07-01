@@ -1,0 +1,32 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : statistics.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 02/14/2018
+
+-- Description   : statistics learning
+
+-------------------------------------------------------------------------------
+
+create table t1 
+pctfree 99
+pctused 1
+as
+select 
+	rownum	id,
+	trunc(100*dbms_random.normal)	val,
+	rpad('x',100) padding
+from 
+	all_objects
+where
+	rownum <=100000;
+	
+	

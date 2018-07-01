@@ -1,0 +1,42 @@
+latch lock: 多个sessions并发访问shared memory,一个session要修改内存时，必须取得latch lock or mutex
+
+访问不在共享内存（SGA）中的数据块，排序，分组，连接时，都可能产生大量的DISK IO. Oracle会尽量在PGA中完成排序，分组，连接，但是当数据量很大时，数据会被交换到temporary segment中
+
+调优过程：
+1. 最小化应用负载， index, denormalization, partition, optimizer statistics, sql hint, stored outline, sql profile, sql rewrite,parallel execution
+
+2. 减少lock contention,独占锁导致所有别的sessions必须等待
+
+3. 降低物理IO, cache hit ratio, PGA, sorting, order by ....
+
+4. 优化磁盘IO, 增加磁盘数量，RAID 0 / ASM . DBWR是以异步方式写数据到data files上，一般redo / flashback log是瓶颈，如果DBWR跟不上REDO LOG的写操作时，session将会hang
+
+Shared Pool的parsed sql statement管理，尽量使用bind variable,不用literal value,否则，每次执行SQL都要执行expensive hard parse,shared pool full of "One Time" SQL,产生大量latch lock or 
+mutex, cursor sharing set to true or similar，自动将字面量替换成bind variable
+
+Oracle Statistics包含以下信息：
+关于表，需要了解的记录数，used block / free block, average row length, pctused in block
+column,不同value的数量，最大值，最小值，以及列的selectivity
+optional choice, histogram,value的分布情况，有些value出现很多，有些则很少，index在部分情况下有用，histogram is useful in these condition.CBO通过histogram和查询值来确定是否使用索引
+
+histogram 和 bind variable是相斥的两个概念，在sql parsing阶段，CBO需要根据value来决定一个exec plan,但是bind variable会隐藏这个值
+
+10g, 通过bind variable peeking ,在生成执行计划时，oracle会预读第一个bind variable的值，一般会生成好的exec plan但是有时也会随机生成非常糟糕的执行计划
+
+11g, adaptive cursor sharing, when bind value is different, oracle generate different execution plan
+
+hint , 明确连接顺序，访问路径类型，所使用的索引，优化目标，以及其他指示.
+
+stored outline, sql profile, 写新sql时，通过添加提示或者改变sql语句来提升性能
+优化一个在线系统的SQL时，由于SQL无法快速修改，可以用stored outline来确保sql exec plan 不会在statistics更新后/oracle版本变化后发生变化, sql outline是一组提示集，提高plan stability.OLTP中一般是个好选择
+
+data warehosue 使用sql profile更适合，更关注optimizer flexibility. SQL profile 提供额外统计信息，帮助optimizer做出更好的选择。SQL Profile只服务于特定的一条SQL
+
+SQL BASELINE是一条基线，每次生成新的执行计划时，都会先于这条基线进行对比，如果cost更少，才会采用，是exec plan 和 statistics的组合
+
+ACID和并发性之间的取舍。row lock, block lock, table lock的区别
+
+
+
+
+

@@ -1,0 +1,3 @@
+userid='jmon_owner/ccdba@oda_helm'
+exclude=procobj:"IN (SELECT NAME FROM sys.OBJ$ WHERE TYPE# IN (47,48,49,50,66,67,68,69,71,72,74))",job,TABLE:"IN ('CC_V$SYSSTAT','CC_WRH$SYSTEM_EVENT','CC_DBA_SCHEDULER_JOBS')"
+SCHEMAS=jmon_owner 

@@ -1,0 +1,108 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : sql tuning concept.txt
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : Notes
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 02/15/2018
+
+-- Description   : Cost concepts
+
+-------------------------------------------------------------------------------
+
+Tuning Purpose:
+	Reduce user response time/ increase throughput 用最少的资源去处理所有信息
+	
+Tuning Goal:
+	每个问题都是不同的，比如在线交易系统，用户一个操作等待了3分钟才更新，或者一个电子仓库系统，同样一个query耗时3分钟，但是占用了所有cpu资源，导致其他query都必须等待
+	这两个问题由不同原因引起，需要分别处理
+	
+SQL Tuning Task:
+	proactive sql tuning ,定时用SQL Tuning Advisor去让SQL执行的更快
+	reactive sql tuning, 去定点的提高一个sql的performance
+	
+SQL Tuning Steps:
+	1. identify high-load SQL statements
+		回顾过去的execution history，找到占用大量系统资源的sql statements
+	2. gathering performance-related data
+		optimizer statistics是至关重要的，如果这些统计信息不准确或不存在，那么optimizer不能生存最佳的plan.其他相关数据比如table structure, views, definition of any index
+	3. determining the causes of the problem
+		一般原因有以下几种：
+			3.1 inefficiently designed sql statements
+				设计SQL时让SQL做无必要的运算，导致性能很差，这种情况下只能重写SQL.典型的几种情况
+					1 Neglecting to add a join condition, which leads to a Cartesian Join(really really bad design)
+					2 Using hints to specify a large table as the driving table in a join(把大table加入刀小table而不是把小table加入到大table中)
+					3 Specifying UNION instead of UNION ALL（Union需要sorting, but union all doesn't need）
+					4 Making a subquery execute for every row in an outer query(每个outer query的每一行，subquery也跟着计算了一遍)
+			
+			3.2 Suboptimal execution plans （大部分问题都属于这类）
+				optimizer是数据库里的一个内部程序，通常会选择best execution plan.但是有时plan会选择一个不亮的access path.比如一个table有一个low selectivity index可能会导致
+				optimizer选择使用full table scan instead of using indexes
+				可以通过比较plan,与数据增长一起分析，可以更有效的确认performance degradation
+				
+			3.3 missing SQL access structures
+				缺乏 SQL access structures, such as indexes and materlized views, 导致suboptimal SQL performance
+				
+			3.4 Stale optimizer statistics
+				DBMS_STATS生成的数据没有及时更新，导致optimizer做出错误决定
+				
+			3.5 Hardware problems
+				可能是又内存，disk IO, CPU的问题引起的
+				
+	4. 确认问题范围
+		可能是database level也可能是statement level
+		数据库level,比如shared pool太小，导致stored sql plan aged out too quickly,导致太多的hard parses.
+		Use an initialization parameter to increase the shared pool size
+		
+		或者是statement level的，那么改parameter反而可能导致整个数据库性能恶化，而根本原因是缺失一个index
+		
+	5. Implementing corrective actions for suboptimally performing SQL statements
+		e.g. Using Bind Variable to avoid hard parses
+		rewrite sql statement to be more efficient 
+		break complex SQL statement into multiple simple statements
+		
+		有时，可能有schema上的重新structure,比如，index a new access path,reorder columns in a concatenated index.
+		
+	6. Preventing SQL performance regressions
+	
+		确保最佳的SQL performance , verify the execution plan and choose the better plans.
+		可以通过optimizer statistics,sql profiles,and SQL plan baselines
+		
+SQL Tuning Tools:
+
+	1. Automated SQL Tuning Tools
+		ADDM can identidfy the root cause of problem,provide recommendations for correction.
+		ADDM and other adviosrs use AWR.运用AWR里收集的数据分析来确定performance problems,including high-load SQL.
+	
+		比如，可以让ADDM在晚上运行，然后早上查看最新的report来确认performance issues
+		
+	2. SQL Tuning Advisor 
+		在database maintenance windows期间，SQL Tuning Advisor会自动运行
+			1 checking for missing or stale statistics
+			2 Builds SQL profile --> SQL Profile是auxiliary information.用来修正错误预估，可以提供更精确的基数，cardinality和selectivity.
+									最后让optimizer选择一个better plan.
+			3 尝试一个别的access path是否可以提升performance
+			4 确认sql是否正在使用一个差的plan
+			
+	3. SQL Access Advisor
+		是一个内部程序，会建议用户创建materialized views, indexes,and materialized view logs. create,drop, or retain
+		SQL Access Advisor input: actual workload,或者预估的一个workload
+		SQL Access Advisor 会预估space usage/query performance之间的平衡。
+		然后会推荐最cost-effective configuration of new and exisiting materialized views and indexes.
+		或者推荐partitions
+		
+	4. SQL Plan Management(SQL plan baseline)
+		这是一个预防性的方法，允许optimizer自动管理 exec plan, ensuring database uses only known or verified plan
+		SQL plan baseline,包含one or more accepted plans for each SQL statement.
+		By using baselines,SQL Plan management可以预防sql plan regressions
+		
+	5. SQL Performance Analyzer
+		SQL Performance Analyzer通过
+
+		

@@ -28,3 +28,7 @@ SELECT window_name,
        comments
 FROM   dba_scheduler_windows
 ORDER BY window_name;
+
+select text from all_source
+where name = 'AIMS_DATA_COLLECTOR'
+order by line;

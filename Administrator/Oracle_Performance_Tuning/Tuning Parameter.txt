@@ -1,0 +1,7 @@
+show parameter CONTROL_MANAGEMENT_PACK_ACCESS
+
+DIAGNOSTIC+TUNING: Diagnostic Pack and Tuning Pack functionally is enabled in the database server.
+
+DIAGNOSTIC: Only Diagnostic Pack functionality is enabled in the server.
+
+NONE: Diagnostic Pack and Tuning pack functionally is disabled in the database server.

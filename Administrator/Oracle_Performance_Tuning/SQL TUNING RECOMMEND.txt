@@ -1,0 +1,35 @@
+Tuning recommendations include:(意味着solution也就这几种)
+
+	Collection of object statistics
+
+	Creation of indexes
+
+	Rewriting SQL statements
+
+	Creation of SQL profiles
+
+	Creation of SQL plan baselines
+、
+Configure SQL Tuning Advisor to run automatically using DBMS_AUTO_SQLTUNE, or on demand using DBMS_SQLTUNE.
+
+	Automatically -- autotask , known for automatica SQL Tuning Advisor
+
+	Manual -- Oracle Enterprise Manager Cloud Control or DBMS_SQLTUNE plsql package
+
+A SQL tuning set (STS) is a database object that stores SQL statements along with their execution context.
+
+SQL TUNING Advisor output:
+
+	Advice on optimizing the execution plan
+
+	Rationale for the proposed optimization
+
+	Estimated performance benefit
+
+	SQL statement to implement the advice
+	
+	The benefit percentage shown for each recommendation is calculated using the following formula:
+
+	abnf% = (time_old - time_new)/(time_old)
+	
+	自动化的，如果设置允许，STA会自动应用sql profiles, 如果是手工，则绝对不会自动implements sql profiles

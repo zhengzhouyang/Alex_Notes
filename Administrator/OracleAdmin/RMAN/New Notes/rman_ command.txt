@@ -1,0 +1,120 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : *.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 01/21/2018
+
+-- Description   : RMAN Commmand
+
+-------------------------------------------------------------------------------
+
+1 Connect to database
+	
+	OS Authentication
+		rman TARGET /
+		rman target '"/ as sysdba"'
+		rman target '"/ as sysbackup"'
+
+	Password file Authentication
+		rman target '"sdba@prod1 as sysdba"'
+		rman target '"sbu@prod1 as sysbackup"'
+		rman target sbu@prod1
+	
+	Connecting to Target and a Recovery Catalog from the System Prompt
+		rman TARGET sbu@prod CATALOG rco@catdb 
+		===> recovery catelog is a schema in other database contains rman metadata, usually it is stored in database control file
+	
+	Connecting RMAN to an Auxiliary Database
+		% rman
+		RMAN> CONNECT TARGET /
+		RMAN> CONNECT AUXILIARY sbu@aux
+
+		% rman target / auxiliary sbu@aux
+		Usually it use with duplicate command to create a standby database
+	
+	Connections to CDB and PDB
+		Usually DBA can connect to root (CDB) using
+		rman TARGET /
+		BACKUP PLUGGABLE DATABASE sales, hr; ==> Backup PDB,which has a lot of restrictions
+		
+		If you need to connect to a PDB only
+		rman target c##bkuser@sales(need have sales in TNSNAMES.ora)
+
+	Log
+		% rman LOG /tmp/rman.log
+		
+	
+2. RMAN Check syntax 
+
+	% rman CHECKSYNTAX
+	
+	Then Enter the RMAN commands to be tested.
+	
+	% rman CHECKSYNTAX @filename ===> check the syntax in a command file 
+	
+3. RMAN Configuration
+
+	SHOW ALL;
+	
+	SHOW RETENTION POLICY;
+	SHOW DEFAULT DEVICE TYPE;
+	
+	# reset the configuration to default
+		CONFIGURE BACKUP OPTIMIZATION CLEAR;
+		CONFIGURE RETENTION POLICY CLEAR;
+		CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK CLEAR;
+	
+	Specifies that backups go to disk by default. Database block size must be multiple of the phsical block size of the destinaton device
+		CONFIGURE DEFAULT DEVICE TYPE TO DISK
+	
+		CONFIGURE DEFAULT DEVICE TYPE TO sbt
+	
+	overwrite the default setting by specify it clearly
+		BACKUP DEVICE TYPE sbt DATABASE;
+		BACKUP DEVICE TYPE DISK DATABASE;
+	
+	CONFIGURE DEVICE TYPE DISK BACKUP TYPE TO COPY; # image copies
+	CONFIGURE DEVICE TYPE DISK BACKUP TYPE TO BACKUPSET; # uncompressed
+	
+	CONFIGURE DEVICE TYPE DISK BACKUP TYPE TO COMPRESSED BACKUPSET;
+	CONFIGURE DEVICE TYPE sbt BACKUP TYPE TO COMPRESSED BACKUPSET;
+	
+	for channel, second conf will make first conf invalid
+		CONFIGURE CHANNEL DEVICE TYPE DISK MAXPIECESIZE 2G;
+		CONFIGURE CHANNEL DEVICE TYPE DISK FORMAT /tmp/%U;
+	
+	valid conf:
+		CONFIGURE CHANNEL DEVICE TYPE DISK FORMAT '/disk1/ora_df%t_s%s_s%p';
+		or ASM
+		CONFIGURE CHANNEL DEVICE TYPE DISK FORMAT '+dgroup1';
+	
+	channel number should match tape or disk number,
+	Failing to allocate the right number of channel adversely affect RMAN performance during IO operations.
+		RMAN> CONFIGURE DEVICE TYPE sbt PARALLELISM 2;
+	
+	RMAN take care of control file and SPFILE backup, even the control file is lost, database still can be recoverable
+		CONFIGURE CONTROLFILE AUTOBACKUP ON;
+	
+	default string format c-IIIIIIIIII-YYYYMMDD-QQ
+	IIIIIIIIII DBID
+	YYYYMMDD timestamp
+	QQ hex number
+		CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE deviceSpecifier TO 'string';
+
+	? stands for oracle_home /u01 lost may cause backup fail
+		CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK TO '?/oradata/cf_%F';
+
+	? ASM location for backups
+		CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK TO '+dgroup1/%F';
+	
+	Reset the conf
+		CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK CLEAR;
+		CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE sbt CLEAR;

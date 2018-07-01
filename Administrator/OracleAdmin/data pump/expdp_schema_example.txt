@@ -1,0 +1,34 @@
+expdp exclude=procobj:"IN (SELECT NAME FROM sys.OBJ$ WHERE TYPE# IN (47,48,49,50,66,67,68,69,71,72,74))",job,TABLE:"IN ('CC_V$SYSSTAT','CC_WRH$SYSTEM_EVENT','CC_DBA_SCHEDULER_JOBS')" jmon_owner/ccdba@ALEXDB2 schemas=jmon_owner directory=DATA_PUMP_DIR_MIG dumpfile=jmon.dmp logfile=expdpJMON.log
+
+impdp hr/hr@devdb11 schemas=hr directory=DATA_PUMP_DIR dumpfile=hr.dmp logfile=impdpHR.log
+
+expdp estimate=Y hr/hr@alexdb2 schemas=hr directory=DATA_PUMP_DIR dumpfile=hr.dmp logfile=expdpHR.log 
+
+nohup scp jmon.dmp root@devdb11.cloudcreek.com:/u01/app/oracle/admin/devdb11/dpdump/ > /tmp/nohup.out 2>&1\
+
+impdp system/*****@devdb11 schemas=jmon_owner directory=DATA_PUMP_DIR dumpfile=jmon.dmp logfile=impdpJMON.log
+
+impdp system/*****@devdb11 include=INDEX schemas=jmon_owner directory=DATA_PUMP_DIR dumpfile=jmon.dmp logfile=impdpJMONIDX.log
+
+create profile JMON_PROFILE limit
+COMPOSITE_LIMIT                  UNLIMITED
+SESSIONS_PER_USER                UNLIMITED
+CPU_PER_SESSION                  UNLIMITED
+CPU_PER_CALL                     UNLIMITED
+LOGICAL_READS_PER_SESSION        UNLIMITED
+LOGICAL_READS_PER_CALL           UNLIMITED
+IDLE_TIME                        UNLIMITED
+CONNECT_TIME                     UNLIMITED
+PRIVATE_SGA                      UNLIMITED
+FAILED_LOGIN_ATTEMPTS            30
+PASSWORD_LIFE_TIME               UNLIMITED
+PASSWORD_REUSE_TIME              UNLIMITED
+PASSWORD_REUSE_MAX               UNLIMITED
+PASSWORD_VERIFY_FUNCTION         NULL
+PASSWORD_LOCK_TIME               UNLIMITED
+PASSWORD_GRACE_TIME              UNLIMITED;
+
+
+select RESOURCE_NAME,limit from dba_profiles  where profile ='JMON_PROFILE';
+
+

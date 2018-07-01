@@ -1,0 +1,40 @@
+--If you want an output table with a different name, first create PLAN_TABLE manually with the UTLXPLAN.SQL script and then rename the table with the RENAME SQL statement.
+	（UTLXPLAN.SQL）
+	RENAME PLAN_TABLE TO my_plan_table;
+	
+--三种不同的语法
+	EXPLAIN PLAN FOR
+		SELECT last_name FROM employees;
+		
+	EXPLAIN PLAN
+	  SET STATEMENT_ID = 'st1' FOR
+	SELECT last_name FROM employees;
+	
+	EXPLAIN PLAN
+	   SET STATEMENT_ID = 'st1'
+	   INTO my_plan_table
+	 FOR
+	SELECT last_name FROM employees;
+
+--Display PLAN_TABLE output
+	
+	UTLXPLS.SQL (This script displays the plan table output for serial processing)
+	UTLXPLP.SQL (This script displays the plan table output including parallel execution columns.)
+	
+	DBMS_XPLAN.DISPLAY e.g.
+		
+		SELECT PLAN_TABLE_OUTPUT FROM TABLE(DBMS_XPLAN.DISPLAY()); -- 用这个去检查plan
+		SELECT PLAN_TABLE_OUTPUT 
+		  FROM TABLE(DBMS_XPLAN.DISPLAY('MY_PLAN_TABLE', 'st1','TYPICAL'));
+		  
+--logical read最多或者elapsed time最长的SQL通常需要优化(确定具有较高消耗时间，CPU/IO Cost最高的SQL语句)
+-- 只是shared pool的数据
+	SELECT SQL_ID,child_number,sql_text,elapsed_time
+	  FROM (SELECT sql_id,child_number,sql_text,elapsed_time,
+					cpu_time,disk_reads,
+			RANK () OVER (ORDER BY elapsed_time DESC) AS elapsed_rank
+				from v$sql)
+	 WHERE elapsed_rank <= 10;
+	 
+--提取并格式化执行计划
+	SELECT * FROM TABLE(dbms_xplan.display_cursor('&sql_id','0','TYPICAL -BYTES'));

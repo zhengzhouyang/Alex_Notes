@@ -33,6 +33,7 @@ SELECT NVL(s.username, '(oracle)') AS username,
        s.module,
        s.machine,
        s.program,
+	    decode(command,2,'INSERT',3,'SELECT',6,'UPDATE',7,'Delete',47,'PL/SQL EXE',command) command,
        TO_CHAR(s.logon_Time,'DD-MON-YYYY HH24:MI:SS') AS logon_time,
        s.last_call_et AS last_call_et_secs,
 	   s.TYPE

@@ -1,0 +1,4 @@
+#!/bin/ksh
+. ~oracle/.bash_profile
+cd /home/oracle/scripts
+expdp directory=DATA_PUMP_DIR_MIG dumpfile=${1}.dmp logfile=${1}.log parfile=export_ekg.par

@@ -1,0 +1,78 @@
+-------------------------------------------------------------------------------
+
+-- File Name     : *.sql
+
+-- Author        : Alex(Zhouyang Zheng)
+
+-- Corporation	 : Cloud Creek Systems, Inc.
+
+-- Call Syntax   : start path/*.sql from sql*plus
+
+-- Requirements  : Access Privileges
+
+-- Last Modified : 01/21/2018
+
+-- Description   : RMAN Concepts
+
+-------------------------------------------------------------------------------
+
+
+1.  Failure Types : Media Failures, User Errors, Application Errors
+	
+	Media Failures: Physical problem on disk, failed to read or write on the data file
+		disaster recovery strategy such as standby database protect againt catestrophic data loss, e.g. entire database lost
+		
+	User Errors:
+		data in database is changed or deleted incorrectly, caused by application logical or manual mistakes
+		data loss can be localized or widespread.
+			e.g. delete a wrong person in employee table 				   =====> localized
+				 batch jobs delete company entire orders for current month =====> widespread
+		manage user privileges properly and backup strategy detemines how gracefully you can recover the data loss
+				 
+	Application Errors:
+		Sometimes a software malfunction could cause corrupt data blocks.
+			physical corruption, also can be called media corruption, database can't recongize the block at all, 
+				the checksum is invalid, the blocks contains all ZEROS or the header and footer of the block don't match
+				If the corruption is not extensive, you can often repair it eaily with block media recovery
+
+2.	Data Archival
+
+	archival backup is to keep historical data, not serves for disaster recovery strategy.
+		e.g. backup database at the end of a business quarter
+		
+3. Data Transfer
+
+	backup of a database or database component and move it the another location.
+		e.g. create a database copy, create a tablespace copy and import into another database,move an entire database from one platform to another one 
+
+4. RMAN BACKUPS ADVS
+	Incremental Backups : stores only block changes since previous backup. 
+		more compact backups and faster recovery, thus reduce the need to apply redo during data file media recovery
+		If block change tracking is enabled, the recovery performance will be improved becuase no need to full scan input data files
+		
+	Block Media Recovery: allows DBA to repair a data file with only a small number of corrupt blocks without taking it offline or restoring it from backup.
+	
+	Binary compression: compression reduces the size of backups
+	
+	Encrypted backups : binary encryption to store backup sets in an encrypted format.Need additional option to use this features
+	
+	Automated database duplication : easily create a copy of your database,supporting various storage configurations, including direct duplication from ASM databases
+	
+	Corss-platform data conversion
+
+
+5. Logical flashback
+	It relies on undo data. Provide qucik fix on data loss without the need to restore the database.
+	No need to expand this topic in RMAN notes
+	
+6. Data recovery advisor
+	Data Recovery Advisor:
+		automatically diagnoses persistent data failures,
+		presents appropriate repair options,
+		executes repairs at your request
+	A failure can be directly mapped to a set of repair actions.
+	Each failure has a status of open or closed
+	Each failure has a prority of crtical , high or low
+	Data integrity check can detected a failure and mapped it to a set of repaid options
+	repair option may include data file restore and recovery, media recovery,flashback database or so on
+	If you choose automated repair option, Data Recovery Advisor
