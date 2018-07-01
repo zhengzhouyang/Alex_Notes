@@ -1,0 +1,25 @@
+echo "OUTPUT" | mailx -s "SUBJECT" -a "./active_sessions.out" zhengzhouyang3@gmail.com
+
+echo "OUTPUT" | mailx -s "SUBJECT"  zhengzhouyang3@gmail.com < ./active_session1.out
+
+echo "OUTPUT" | mailx -s "SUBJECT"  zhengzhouyang3@gmail.com < ./count_result.log
+
+echo "OUTPUT" | mailx -s "httpd.conf"  zhengzhouyang3@gmail.com < ./httpd.conf
+
+echo "OUTPUT" | mailx -s "ssl.conf"  zhengzhouyang3@gmail.com < ./ssl.conf
+
+echo "OUTPUT" | mailx -s "ohs1.conf"  zhengzhouyang3@gmail.com < ./ohs1.conf
+
+mailx -a /home/oracle/scripts/tbs_weekly_report.txt  -s 'weekly_report' zhengzhouyang3@gmail.com
+
+echo "OUTPUT" | mailx -s "SUBJECT" zhengzhouyang3@gmail.com,ykharkar@cloudcreek.com
+
+echo "OUTPUT" | mailx -s "SUBJECT" zhengzhouyang3@gmail.com< ./shm.output
+
+echo "OUTPUT" | mailx -s "SUBJECT" zhengzhouyang3@gmail.com < /tmp/sctl
+
+sudo ulimit -a
+
+ulimit -a
+
+ulimit -a

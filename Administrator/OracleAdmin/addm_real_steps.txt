@@ -1,0 +1,24 @@
+select snap_id,begin_interval_time from dba_hist_snapshot order by begin_interval_time desc;
+
+declare
+	tname VARCHAR2(30);
+BEGIN
+	tname := 'ADDM for diag';
+	DBMS_ADDM.ANALYZE_DB(tname, &bs_id, &es_id);
+END;
+/
+
+SET LONG 1000000 PAGESIZE 0;
+select dbms_addm.get_report('ADDM for diag') from dual;
+
+Views related to ADDM information
+
+DBA_ADVISOR_FINDINGS
+
+DBA_ADDM_FINDINGS
+
+DBA_ADVISOR_FINDING_NAMES
+
+DBA_ADVISOR_RECOMMENDATIONS
+
+DBA_ADVISOR_TASKS

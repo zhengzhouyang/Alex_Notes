@@ -1,0 +1,32 @@
+DG11G.__db_cache_size=251658240
+DG11G.__java_pool_size=16777216
+DG11G.__large_pool_size=33554432
+DG11G.__oracle_base='/u01/app/oracle'#ORACLE_BASE set from environment
+DG11G.__pga_aggregate_target=553648128
+DG11G.__sga_target=570425344
+DG11G.__shared_io_pool_size=0
+DG11G.__shared_pool_size=234881024
+DG11G.__streams_pool_size=16777216
+*.audit_file_dest='/u01/app/oracle/admin/DG11G/adump'
+*.audit_trail='db'
+*.compatible='11.2.0.4.0'
+*.control_files='/u01/app/oracle/oradata/DG11G/control01.ctl','/u01/app/oracle/fast_recovery_area/DG11G/control02.ctl'
+*.db_block_size=8192
+*.db_domain=''
+*.db_name='DG11G'
+*.db_recovery_file_dest='/u01/app/oracle/fast_recovery_area'
+*.db_recovery_file_dest_size=6291456000
+*.diagnostic_dest='/u01/app/oracle'
+*.dispatchers='(PROTOCOL=TCP) (SERVICE=DG11GXDB)'
+*.fal_server='DB11G_STBY'
+*.log_archive_config='DG_CONFIG=(DG11G,DG11G_STBY)'
+*.log_archive_dest_2='SERVICE=DG11G_STBY NOAFFIRM ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=DG11G_STBY'
+*.log_archive_dest_state_2='ENABLE'
+*.log_archive_format='%t_%s_%r.dbf'
+*.log_archive_max_processes=30
+*.memory_target=1124073472
+*.open_cursors=300
+*.processes=150
+*.remote_login_passwordfile='EXCLUSIVE'
+*.standby_file_management='AUTO'
+*.undo_tablespace='UNDOTBS1'

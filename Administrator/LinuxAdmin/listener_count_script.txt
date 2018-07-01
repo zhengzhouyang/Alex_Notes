@@ -1,0 +1,6 @@
+--先把包含connect_data的行给提出来
+grep CONNECT_DATA alex_listener.log > count_result_2.log
+
+
+-- w12是前12个字符相同，-c 为count
+uniq -w12 -c count_result_2.log > count_result.log 

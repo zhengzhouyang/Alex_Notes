@@ -1,0 +1,17 @@
+DG11G =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dgprimary.cloudcreek.priv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DG11G)
+    )
+  )
+
+DG11G_STBY =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = dgstandby.cloudcreek.priv)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DG11G)
+    )
+  )

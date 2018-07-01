@@ -1,0 +1,1 @@
+select index_name, table_owner, table_name, column_name from all_ind_columns where table_name = 'COL_ACTUAL_NAMES';

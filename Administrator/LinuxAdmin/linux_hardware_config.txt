@@ -1,0 +1,5 @@
+cat /etc/oracle-release
+
+less /proc/meminfo
+
+less /proc/cpuinfo

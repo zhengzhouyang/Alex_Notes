@@ -1,0 +1,8 @@
+dba_recyclebin;
+
+FLASHBACK TABLE ccs.app_users
+  TO TIMESTAMP (SYSTIMESTAMP - INTERVAL '10' minute);
+  
+  
+  FLASHBACK TABLE "BIN$ZJKRw1qRVALgU9jRqMA+Wg==$0" TO BEFORE DROP 
+     RENAME TO app_2_users;

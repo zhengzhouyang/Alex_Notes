@@ -1,0 +1,56 @@
+sterisk (*) 
+plus sign (+) 
+minus sign (-) 
+forward slash (/) 
+backslash (\) 
+percent symbol (%) 
+exclamation point symbol (!) 
+underscore (_) 
+equal sign (=) 
+decimal points (.) 
+semicolon (;) 
+increment (++) operators 
+decrement (--) operators 
+( ) Parenthesis 
+{ } Braces 
+[ ] Brackets 
+, Comma 
+; Semicolon 
+' Quote 
+@ At 
+
+
+{ open brace, open curly 
+} close brace, close curly 
+( open parenthesis, open paren 
+) close parenthesis, close paren 
+() brakets/ parentheses 
+[ open bracket 
+] close bracket 
+[] square brackets 
+. period, dot 
+ vertical bar, vertical virgule 
+& ampersand, and, reference, ref 
+* asterisk, multiply, star, pointer 
+/ slash, divide, oblique 
+// slash-slash, comment 
+# pound 
+\ backslash, sometimes escape 
+~ tilde 
+. full stop 
+, comma 
+: colon 
+; semicolon 
+? question mark 
+! exclamation mark  exclamation point 
+' apostrophe 
+- hyphen
+-- dash 
+... dots/ ellipsis 
+" single quotation marks 
+"" double quotation marks 
+? parallel 
+& ampersand = and 
+~ swung dash
+§ section; division 
+? arrow

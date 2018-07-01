@@ -1,0 +1,18 @@
+
+ This interface requires both sysctl and 
+ procfs to be built into the kernel, and procfs mounted somewhere in the filesystem (usually on 
+ /proc, as in the examples below). You can read the values for the actual parameters by "catting" files in 
+ /proc/sys/net/ipv4/ directory:
+
+
+  # cat /proc/sys/net/ipv4/tcp_keepalive_time
+  7200
+
+  # cat /proc/sys/net/ipv4/tcp_keepalive_intvl
+  75
+
+  # cat /proc/sys/net/ipv4/tcp_keepalive_probes
+  9
+        
+
+ The first two parameters are expressed in seconds, and the last is the pure number. This means that the keepalive routines wait for two hours (7200 secs) before sending the first keepalive probe, and then resend it every 75 seconds. If no ACK response is received for nine consecutive times, the connection is marked as broken.

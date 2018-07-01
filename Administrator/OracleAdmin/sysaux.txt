@@ -1,0 +1,86 @@
+col OCCUPANT_NAME for a30
+select occupant_name,occupant_desc,space_usage_kbytes from v$sysaux_occupants;
+
+SQL> col OCCUPANT_NAME for a30
+select occupant_name,occupant_desc,space_usage_kbytes from v$sysaux_occupants;SQL>
+
+OCCUPANT_NAME                  OCCUPANT_DESC                                                    SPACE_USAGE_KBYTES
+------------------------------ ---------------------------------------------------------------- ------------------
+LOGMNR                         LogMiner                                                                      14976
+LOGSTDBY                       Logical Standby                                                                1536
+SMON_SCN_TIME                  Transaction Layer - SCN to TIME mapping                                        3328
+AUDSYS                         AUDSYS schema objects                                                          2560
+PL/SCOPE                       PL/SQL Identifier Collection                                                   1984
+STREAMS                        Oracle Streams                                                                 1216
+AUDIT_TABLES                   DB audit tables                                                                   0
+XDB                            XDB                                                                           69504
+AO                             Analytical Workspace Object Table                                             40704
+XSOQHIST                       OLAP API History Tables                                                       40704
+XSAMD                          OLAP Catalog                                                                      0
+SM/AWR                         Server Manageability - Automatic Workload Repository                         127424
+SM/ADVISOR                     Server Manageability - Advisor Framework                                       8576
+SM/OPTSTAT                     Server Manageability - Optimizer Statistics History                          420480
+SM/OTHER                       Server Manageability - Other Components                                      107968
+STATSPACK                      Statspack Repository                                                              0
+SDO                            Oracle Spatial                                                                84224
+WM                             Workspace Manager                                                              6656
+ORDIM                          Oracle Multimedia ORDSYS Components                                             448
+ORDIM/ORDDATA                  Oracle Multimedia ORDDATA Components                                          16640
+ORDIM/ORDPLUGINS               Oracle Multimedia ORDPLUGINS Components                                           0
+ORDIM/SI_INFORMTN_SCHEMA       Oracle Multimedia SI_INFORMTN_SCHEMA Components                                   0
+EM                             Enterprise Manager Repository                                                     0
+TEXT                           Oracle Text                                                                    2880
+ULTRASEARCH                    Oracle Ultra Search                                                               0
+ULTRASEARCH_DEMO_USER          Oracle Ultra Search Demo User                                                     0
+EXPRESSION_FILTER              Expression Filter System                                                          0
+EM_MONITORING_USER             Enterprise Manager Monitoring User                                              384
+TSM                            Oracle Transparent Session Migration User                                         0
+SQL_MANAGEMENT_BASE            SQL Management Base Schema                                                     2496
+AUTO_TASK                      Automated Maintenance Tasks                                                     320
+JOB_SCHEDULER                  Unified Job Scheduler                                                         22080
+
+
+SQL> alter session set container = PRODPDB1;
+
+Session altered.
+
+SQL> col OCCUPANT_NAME for a30
+select occupant_name,occupant_desc,space_usage_kbytes from v$sysaux_occupants;SQL>
+
+OCCUPANT_NAME                  OCCUPANT_DESC                                                    SPACE_USAGE_KBYTES
+------------------------------ ---------------------------------------------------------------- ------------------
+LOGMNR                         LogMiner                                                                          0
+LOGSTDBY                       Logical Standby                                                                 128
+SMON_SCN_TIME                  Transaction Layer - SCN to TIME mapping                                        3456
+AUDSYS                         AUDSYS schema objects                                                          4864
+PL/SCOPE                       PL/SQL Identifier Collection                                                   2944
+STREAMS                        Oracle Streams                                                                   64
+AUDIT_TABLES                   DB audit tables                                                                   0
+XDB                            XDB                                                                           62272
+AO                             Analytical Workspace Object Table                                             39552
+XSOQHIST                       OLAP API History Tables                                                       39552
+XSAMD                          OLAP Catalog                                                                      0
+SM/AWR                         Server Manageability - Automatic Workload Repository                            448
+SM/ADVISOR                     Server Manageability - Advisor Framework                                       4480
+SM/OPTSTAT                     Server Manageability - Optimizer Statistics History                          506816
+SM/OTHER                       Server Manageability - Other Components                                      102016
+STATSPACK                      Statspack Repository                                                              0
+SDO                            Oracle Spatial                                                                80128
+WM                             Workspace Manager                                                              6656
+ORDIM                          Oracle Multimedia ORDSYS Components                                             448
+ORDIM/ORDDATA                  Oracle Multimedia ORDDATA Components                                          16640
+ORDIM/ORDPLUGINS               Oracle Multimedia ORDPLUGINS Components                                           0
+ORDIM/SI_INFORMTN_SCHEMA       Oracle Multimedia SI_INFORMTN_SCHEMA Components                                   0
+EM                             Enterprise Manager Repository                                                     0
+TEXT                           Oracle Text                                                                    2880
+ULTRASEARCH                    Oracle Ultra Search                                                               0
+ULTRASEARCH_DEMO_USER          Oracle Ultra Search Demo User                                                     0
+EXPRESSION_FILTER              Expression Filter System                                                          0
+EM_MONITORING_USER             Enterprise Manager Monitoring User                                              192
+TSM                            Oracle Transparent Session Migration User                                         0
+SQL_MANAGEMENT_BASE            SQL Management Base Schema                                                      896
+AUTO_TASK                      Automated Maintenance Tasks                                                     320
+JOB_SCHEDULER                  Unified Job Scheduler                                                         22720
+
+32 rows selected.
+
