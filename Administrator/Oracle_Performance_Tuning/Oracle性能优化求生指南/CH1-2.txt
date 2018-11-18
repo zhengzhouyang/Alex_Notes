@@ -28,7 +28,8 @@ histogram 和 bind variable是相斥的两个概念，在sql parsing阶段，CBO
 hint , 明确连接顺序，访问路径类型，所使用的索引，优化目标，以及其他指示.
 
 stored outline, sql profile, 写新sql时，通过添加提示或者改变sql语句来提升性能
-优化一个在线系统的SQL时，由于SQL无法快速修改，可以用stored outline来确保sql exec plan 不会在statistics更新后/oracle版本变化后发生变化, sql outline是一组提示集，提高plan stability.OLTP中一般是个好选择
+优化一个在线系统的SQL时，由于SQL无法快速修改，可以用stored outline来确保sql exec plan 不会在statistics更新后/oracle版本变化后发生变化, 
+sql outline是一组提示集，提高plan stability.OLTP中一般是个好选择
 
 data warehosue 使用sql profile更适合，更关注optimizer flexibility. SQL profile 提供额外统计信息，帮助optimizer做出更好的选择。SQL Profile只服务于特定的一条SQL
 

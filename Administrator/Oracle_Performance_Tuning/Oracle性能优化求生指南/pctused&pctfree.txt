@@ -1,0 +1,8 @@
+pctfree不能太高也不能太低，
+
+太低时，表上有频繁的数据更新操作，导致数据块内预留空间不足，从而导致整行迁移至一个新的数据块中（row migration）,
+index中的指针依然记录着了老地址，到了老地址后又转到新地址上，导致额外的一次IO开销，
+如果v$sysstat中，table fetch continued row数很高，那么row migration就会很高，每次row migration就会让table fetch continued row数增加
+
+如果pctfree值过高，会造成空间浪费，并且如果此表上只有插入删除操作而并无更新操作，那么可以将pctfree设置为一个接近0的值
+

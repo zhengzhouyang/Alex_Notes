@@ -1,0 +1,56 @@
+	 Centos 7 has Maria DB installed by default. So if you wanna use Mysql, you need to remove the Maria DB firstly
+	 yum -y remove mariadb-libs
+	 
+	 
+	 i. wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+     ii. yum localinstall mysql57-community-release-el7-7.noarch.rpm
+     iii. yum repolist enabled | grep "mysql.*-community.*"
+     iv. yum install mysql-community-server
+     v. yum-config-manager --disable mysql57-community
+     vi. yum-config-manager --enable mysql56-community
+     viii. service mysqld start
+     ix. service mysqld status
+     x. mysql --version
+     xi. mysql -u root -p
+	 
+	 mysql_secure_installation reset root password and reload all privileges
+	 
+Create a New MySQL User and DatabasePermalink
+	
+	create database testdb;
+	create user 'testuser'@'localhost' identified by 'password';
+	grant all on testdb.* to 'testuser' identified by 'password';
+	
+	or
+	
+	create database testdb;
+	grant all on testdb.* to 'testuser' identified by 'password';
+	
+	exit
+	
+Create a Sample Table
+	
+	mysql -u testuser -p
+	
+	use testdb;
+	create table customers (customer_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, first_name TEXT, last_name TEXT);
+	
+	exit
+
+Reset the MySQL Root PasswordPermalink
+
+	sudo systemctl stop mysqld
+	sudo mysqld_safe --skip-grant-tables &
+	mysql -u root
+	
+	use mysql;
+	update user SET PASSWORD=PASSWORD("password") WHERE USER='root';
+	flush privileges;
+	exit
+	
+	sudo systemctl start mysqld
+	
+	GRANT ALL PRIVILEGES
+	ON database.*
+	TO 'user'@'%.123.123.123'
+	IDENTIFIED BY 'newpassword';

@@ -1,0 +1,18 @@
+/*
+位图联结索引
+
+理论上这种index可以避免对大表customers的scan
+但实际操作上并没有得到和书中一样的执行计划，依然对customers的记录进行了扫描，
+但是由于cust_email上有index，因此开销也不是非常大
+*/
+
+CREATE BITMAP INDEX sales_bm_join_i
+ON	sales (c.cust_email)
+FROM sh.sales s, oe.customers c
+where s.cust_id=c.customer_id
+local;
+
+select sum(amount_sold)
+from oe.customers c join sh.sales s on 
+s.cust_id=c.customer_id
+where c.cust_email='Daniel.Gueney@REDPOLL.COM';

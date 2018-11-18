@@ -1,0 +1,29 @@
+Description: runlevel returns unknown
+
+	[root@azheng ~]# runlevel
+	unknown
+
+
+Cause: One job stucked during boot,so boot is incomplete
+
+	[root@azheng ~]# systemctl list-jobs
+	JOB UNIT                                 TYPE  STATE
+	104 multi-user.target                    start waiting
+	208 systemd-update-utmp-runlevel.service start waiting
+	103 graphical.target                     start waiting
+	218 plymouth-quit-wait.service           start running
+	276 systemd-readahead-done.timer         start waiting
+
+Solution: restart gdm service and the queued jobs are running
+
+	[root@azheng ~]# systemctl restart gdm
+
+	[root@azheng ~]# systemctl list-jobs
+	No jobs running.
+
+	[root@azheng ~]# runlevel
+	N 5
+
+
+
+

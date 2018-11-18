@@ -1,0 +1,18 @@
+//Java代码,这里用了literial values
+for(int custId : custIdList){
+	Statement stmt = oracleConnection.createStatement();
+	stmt.execute("UPDATE sh.customers SET cust_valid = 'Y'"
+			+ " WHERE cust_id = " + cust_id);
+	stmt.close();
+}
+
+//Java代码,用bind variable
+PreparedStatement stmt = oracleConnection.prepare Statement(
+		"UPDATE sh.customers SET cust_valid = 'Y'"
+			+ " WHERE cust_id = :custId"
+		);
+
+for(int custId : custIdList){
+	stmt.setInt(1,custId);
+	stmt.execute();
+}

@@ -1,0 +1,101 @@
+-------------------------------------------------------------------------------
+
+-- File Name     	: File_System_Is_Full.txt
+
+-- Author        	: Alex(Zhouyang Zheng)
+
+-- Corporation	 	: Cloud Creek Systems, Inc.
+
+-- Call Syntax   	: N/A
+
+-- Affected Custs	: Grand Pacific
+
+-- Last Modified 	: 01/23/2016
+
+-- Description   	: File System is almost full
+
+-- Severity			: Critical
+
+-- Consequence		: out of spaces
+
+-- Action			: Find some large log files and purge them
+
+-------------------------------------------------------------------------------
+
+Case:
+
+Grand Pracific - gp-portal /u01 98% used
+
+1 cd /u01
+
+2 du -sh * 
+
+3 go to the largest directory
+
+4 do the first three steps recursively until some huge log files are found
+
+5 make sure they are old enough or rare accessed then purge it
+
+cat /dev/null > log files name
+
+in this case
+
+cd /u01/app/oracle/product/10.1.2.0.2/portal/webcache/logs 
+
+ls -ltrh access.log
+
+cat /dev/null > access.log
+
+cd /u01/app/oracle/product/10.1.2.0.2/portal/j2ee/home/log/home_default_island_1
+
+ls -ltrh server.log
+
+ls -ltrh default-web-access.log
+
+cat /dev/null > server.log
+
+cat /dev/null > default-web-access.log
+
+
+find /path/to/files -name "access_log*" -mtime +120 -exec rm {} \;
+
+find /u01/app/oracle/product/10.1.2.0.2/portal/Apache/Apache/logs -maxdepth 1 -name "access_log*" -mtime +120 > /tmp/alex.log 
+
+find /u01/app/oracle/product/10.1.2.0.2/portal/Apache/Apache/logs -maxdepth 1 -name "access_log*" -mtime +120 > /tmp/alex.log 
+
+find /u01/app/oracle/product/10.1.2.0.2/portal/Apache/Apache/logs -maxdepth 1 -name "access_log*" -mtime +120 -exec rm {} \;
+
+find /u01/app/oracle/product/10.1.2.0.2/portal/Apache/Apache/logs -maxdepth 1 -name "error_log.*" -mtime +120 -exec rm {} \;
+
+-infra
+
+find /u01/app/oracle/product/10.1.2.0.2/infra/Apache/Apache/logs -maxdepth 1 -name "access_log*" -mtime +120 -exec ls -ltr {} \; > /tmp/alex.log 
+
+find /u01/app/oracle/product/10.1.2.0.2/infra/Apache/Apache/logs -maxdepth 1 -name "access_log*" -mtime +120 -exec rm {} \;
+
+find /u01/app/oracle/product/10.1.2.0.2/infra/Apache/Apache/logs -maxdepth 1 -name "error_log.*" -mtime +120 -exec ls -ltr {} \;
+
+find /u01/app/oracle/product/10.1.2.0.2/infra/Apache/Apache/logs -maxdepth 1 -name "error_log.*" -mtime +120 -exec rm {} \;
+
+
+
+find /u01/app/oracle/product/10.1.2.0.2/save.portal -mtime -100 -ls
+
+1 tar -cvf zipname directory_path
+
+2 rm -rf directory
+
+3 gzip zipname
+
+
+1 tar -cvf save.portal.tar ./save.portal
+
+2 tar -tvf save.portal.tar
+
+3 rm -rf ./save.portal
+
+4 gzip save.portal.tar
+
+
+
+
