@@ -5,6 +5,7 @@
 	PACKAGE company IS
 		CURSOR company_cur (id_in number) RETURN company%ROWTYPE;
 	END company;
+	
 	PACKAGE BODY company IS
 		CURSOR company_cur(id_in number) RETURN company%ROWTYPE IS
 			SELECT * FROM company ......;
